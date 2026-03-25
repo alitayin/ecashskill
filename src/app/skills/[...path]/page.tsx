@@ -33,12 +33,11 @@ export default async function SkillsPage({ params }: PageProps) {
                 </Button>
               </Link>
               <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-                {breadcrumbs.map((crumb, i) => (
+                <Link href="/skills" className="hover:text-foreground">ecash</Link>
+                {breadcrumbs.slice(1).map((crumb) => (
                   <span key={crumb.path} className="flex items-center">
-                    {i > 0 && <ChevronRight className="w-4 h-4 mx-1" />}
-                    <span className={i === breadcrumbs.length - 1 ? "font-medium" : ""}>
-                      {crumb.name}
-                    </span>
+                    <ChevronRight className="w-4 h-4 mx-1" />
+                    <span className="font-medium">{crumb.name}</span>
                   </span>
                 ))}
               </nav>
@@ -69,19 +68,19 @@ export default async function SkillsPage({ params }: PageProps) {
   return (
     <div className="min-h-screen">
       <header className="border-b bg-white sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link
-            href={relativePath ? "/skills" : "/"}
+            href="/"
             className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-4 h-4" />
-            {relativePath ? "返回 Skills" : "返回首页"}
+            返回首页
           </Link>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl">
-        {relativePath && breadcrumbs.length > 1 && (
+        {breadcrumbs.length > 1 && (
           <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
             <Link href="/skills" className="hover:text-foreground">ecash</Link>
             {breadcrumbs.slice(1).map((crumb) => (
