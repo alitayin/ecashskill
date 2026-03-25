@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ArrowLeft, File, Folder, Download, ChevronRight } from "lucide-react"
 import { getDirectoryContents, getFileContent, getBreadcrumbs } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
+import { marked } from "marked"
 
 interface PageProps {
   params: Promise<{ path?: string[] }>
@@ -54,7 +55,7 @@ export default async function SkillsPage({ params }: PageProps) {
         <main className="container mx-auto px-4 py-8 max-w-4xl">
           <h1 className="text-3xl font-bold mb-6">{filename}</h1>
           <article className="prose max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: file.content }} />
+            <div dangerouslySetInnerHTML={{ __html: marked.parse(file.content) }} />
           </article>
         </main>
       </div>
@@ -80,14 +81,15 @@ export default async function SkillsPage({ params }: PageProps) {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl">
-        {relativePath && (
+        {relativePath && breadcrumbs.length > 1 && (
           <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
-            {breadcrumbs.map((crumb, i) => (
+            <Link href="/skills" className="hover:text-foreground">ecash</Link>
+            {breadcrumbs.slice(1).map((crumb) => (
               <span key={crumb.path} className="flex items-center">
-                {i > 0 && <ChevronRight className="w-4 h-4 mx-1" />}
+                <ChevronRight className="w-4 h-4 mx-1" />
                 <Link
-                  href={i === 0 ? "/skills" : `/skills/${crumb.path}`}
-                  className={i === breadcrumbs.length - 1 ? "font-medium" : "hover:text-foreground"}
+                  href={`/skills/${crumb.path}`}
+                  className="hover:text-foreground"
                 >
                   {crumb.name}
                 </Link>
