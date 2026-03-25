@@ -7,108 +7,108 @@ tags: [ecash, blockchain, node, indexer, contribution]
 
 # Bitcoin ABC
 
-Bitcoin ABC 是 eCash (XEC) 区块链的完整节点实现，包含 Chronik 索引器、ecash-lib 等核心模块。
+Bitcoin ABC is a full node implementation for the eCash (XEC) blockchain, including the Chronik indexer, ecash-lib and other core modules.
 
-## 概述
+## Overview
 
-Bitcoin ABC 提供：
-- eCash 区块链完整节点
-- Chronik 高性能索引器
-- ecash-lib 交易库
-- 共识协议实现（Avalanche）
-- SLP/ALP Token 支持
+Bitcoin ABC provides:
+- Full eCash blockchain node
+- Chronik high-performance indexer
+- ecash-lib transaction library
+- Consensus protocol implementation (Avalanche)
+- SLP/ALP Token support
 
-**仓库**: github.com/Bitcoin-ABC/bitcoin-abc
-**代码审查**: reviews.bitcoinabc.org (Phabricator)
-**开发语言**: C++, Rust, TypeScript/JavaScript
+**Repository**: github.com/Bitcoin-ABC/bitcoin-abc
+**Code Review**: reviews.bitcoinabc.org (Phabricator)
+**Languages**: C++, Rust, TypeScript/JavaScript
 
 ---
 
-## Claude Code 使用指南
+## Claude Code Usage Guide
 
-### 项目结构
+### Project Structure
 
 ```
 bitcoin-abc/
-├── src/                    # C++ 节点实现
-├── modules/               # TypeScript/JavaScript 模块
-│   ├── ecash-lib/        # eCash 交易库
-│   ├── ecash-wallet/     # 钱包功能
-│   ├── ecashaddrjs/      # 地址处理
-│   ├── chronik-client/   # Chronik 客户端
-│   └── cashtab/          # Cashtab 钱包
-├── chronik/              # Rust 索引器实现
-├── apps/                 # Web 应用
-├── doc/                  # 文档
-└── cmake/                # CMake 配置
+├── src/                    # C++ node implementation
+├── modules/               # TypeScript/JavaScript modules
+│   ├── ecash-lib/        # eCash transaction library
+│   ├── ecash-wallet/     # Wallet functionality
+│   ├── ecashaddrjs/      # Address handling
+│   ├── chronik-client/   # Chronik client
+│   └── cashtab/          # Cashtab wallet
+├── chronik/              # Rust indexer implementation
+├── apps/                 # Web applications
+├── doc/                  # Documentation
+└── cmake/                # CMake configuration
 ```
 
-### 模块目录结构
+### Module Directory Structure
 
 ```
 modules/ecash-lib/
-├── src/                   # TypeScript 源码
-├── tests/                 # 测试文件
-├── testkeys/             # 测试密钥
-├── wordlists/            # HD 钱包词表
+├── src/                   # TypeScript source
+├── tests/                 # Test files
+├── testkeys/             # Test keys
+├── wordlists/            # HD wallet wordlists
 ├── package.json
 ├── tsconfig.json
 └── README.md
 ```
 
-### 开发环境要求
+### Development Environment Requirements
 
 ```bash
-# Node.js (使用 pnpm)
+# Node.js (using pnpm)
 node >= 20
 pnpm >= 8
 
-# C++ 构建
+# C++ Build
 cmake >= 3.21
 ninja
 clang-16 / gcc-12+
 llvm-16
 
-# Rust (用于 Chronik)
+# Rust (for Chronik)
 rustup
 cargo
 ```
 
-### 构建步骤
+### Build Steps
 
 ```bash
-# 克隆仓库
+# Clone repository
 git clone ssh://vcs@reviews.bitcoinabc.org:2221/source/bitcoin-abc.git
 cd bitcoin-abc
 
-# 创建构建目录
+# Create build directory
 mkdir build && cd build
 
-# 配置 CMake (Debug)
+# Configure CMake (Debug)
 cmake -GNinja .. -DCMAKE_BUILD_TYPE=Debug
 
-# 构建
+# Build
 ninja
 
-# 运行测试
-ninja check        # 单元测试
-ninja check-functional  # 功能测试
+# Run tests
+ninja check        # Unit tests
+ninja check-functional  # Functional tests
 ```
 
-### 代码风格
+### Code Style
 
-**C++ 规范** (遵循 LLVM):
-- 4 空格缩进（命名空间除外）
-- 类/函数/命名空间使用大括号换行
-- 其他情况大括号同行
-- 函数使用 CamelCase
-- 变量使用 lowerCamelCase
-- 成员变量前缀 `m_`
-- 常量使用 UPPER_SNAKE_CASE
-- 命名空间使用 lower_snake_case
+**C++ Standards** (following LLVM):
+- 4-space indentation (except namespaces)
+- Class/function/namespace braces on new line
+- Other cases braces on same line
+- Functions use CamelCase
+- Variables use lowerCamelCase
+- Member variables prefix `m_`
+- Constants use UPPER_SNAKE_CASE
+- Namespaces use lower_snake_case
 
 ```cpp
-// 正确示例
+// Correct example
 class TransactionValidator {
 public:
     Result validate(const Transaction& tx) const;
@@ -118,65 +118,65 @@ private:
     std::string m_lastError;
 };
 
-// 错误示例
-class transaction_validator {  // 命名空间应为 lower_snake_case
+// Incorrect example
+class transaction_validator {  // namespace should be lower_snake_case
 public:
-    bool ValidateTransaction(transaction TX);  // 参数应为 lowerCamelCase
+    bool ValidateTransaction(transaction TX);  // parameters should be lowerCamelCase
 private:
-    int validation_depth_;  // 成员变量应前缀 m_
+    int validation_depth_;  // member variables should prefix m_
 };
 ```
 
-**TypeScript 规范**:
-- 使用 ESLint + Prettier
-- 启用 `strict: true`
-- 使用具名导出
+**TypeScript Standards**:
+- Use ESLint + Prettier
+- Enable `strict: true`
+- Use named exports
 
-### 测试要求
+### Testing Requirements
 
 ```bash
-# 运行所有测试
+# Run all tests
 ninja check
 
-# 运行单元测试
+# Run unit tests
 ninja check-unit
 
-# 运行功能测试
+# Run functional tests
 ninja check-functional
 
-# 查看测试覆盖率
+# View test coverage
 ninja coverage-check-all
 
-# 使用 Sanitizers 调试
+# Using Sanitizers for debugging
 cmake -GNinja .. \
   -DCMAKE_BUILD_TYPE=Debug \
   -DSANITIZERS_ENABLED=address,thread,undefined
 ```
 
-### 提示词模板
+### Prompt Templates
 
 ```
-我需要为 ecash-lib 添加一个新的签名类型
+I need to add a new signature type to ecash-lib
 
-我需要了解如何贡献到 Bitcoin ABC
+I need to understand how to contribute to Bitcoin ABC
 
-我需要查找 chronik 索引器的源码位置
+I need to find the source location of the chronik indexer
 
-我需要在 ecash-lib 中添加测试用例
+I need to add test cases in ecash-lib
 
-我需要了解模块间的依赖关系
+I need to understand the dependencies between modules
 ```
 
 ---
 
-## Cursor 规则配置
+## Cursor Rules Configuration
 
-### .cursorrules 片段
+### .cursorrules Snippet
 
 ```yaml
-# Bitcoin ABC 配置
+# Bitcoin ABC Configuration
 - name: "bitcoin-abc"
-  description: "eCash 完整节点和开发框架"
+  description: "eCash full node and development framework"
   files:
     - "**/*bitcoin*abc*"
     - "**/modules/**"
@@ -184,62 +184,62 @@ cmake -GNinja .. \
   rules:
     - type: "cpp-style"
       statement: |
-        # C++ 代码规范
-        - 缩进: 4 空格 (LLVM 风格)
-        - 函数: CamelCase
-        - 变量: lowerCamelCase
-        - 成员变量: m_ 前缀
-        - 常量: UPPER_SNAKE_CASE
-        - 命名空间: lower_snake_case
+        # C++ Code Standards
+        - Indentation: 4 spaces (LLVM style)
+        - Functions: CamelCase
+        - Variables: lowerCamelCase
+        - Member variables: m_ prefix
+        - Constants: UPPER_SNAKE_CASE
+        - Namespaces: lower_snake_case
 
     - type: "imports"
       statement: |
-        # TypeScript 模块导入顺序
-        1. 外部依赖 (node_modules)
-        2. 内部模块 (@ecash-lib, chronik-client)
-        3. 相对导入 (./, ../)
-        4. 类型导入使用 import type
+        # TypeScript Module Import Order
+        1. External dependencies (node_modules)
+        2. Internal modules (@ecash-lib, chronik-client)
+        3. Relative imports (./, ../)
+        4. Type imports use import type
 
     - type: "testing"
       statement: |
-        # 测试要求
-        - 所有新功能必须有单元测试
-        - 公共 API 必须有文档注释
-        - 使用 describe/it 风格
-        - Mock 外部依赖
+        # Testing Requirements
+        - All new features must have unit tests
+        - Public APIs must have documentation comments
+        - Use describe/it style
+        - Mock external dependencies
 
     - type: "commit"
       statement: |
-        # 提交规范
-        - 使用 arc diff 创建 diff
-        - 遵循 Conventional Commits
-        - feat: 新功能
-        - fix: 错误修复
-        - test: 测试相关
-        - docs: 文档相关
+        # Commit Standards
+        - Use arc diff to create diff
+        - Follow Conventional Commits
+        - feat: new feature
+        - fix: bug fix
+        - test: test related
+        - docs: documentation related
 ```
 
-### AI 角色设定
+### AI Role Settings
 
 ```
-当你为 Bitcoin ABC 项目编写代码时：
+When writing code for the Bitcoin ABC project:
 
-1. C++ 代码遵循 LLVM 编码标准
-2. TypeScript 使用严格模式
-3. 所有公共 API 必须有 JSDoc 注释
-4. 提交前运行相关测试
-5. 使用 arc lint 进行代码检查
-6. 不要直接提交到 master/main，先创建 topic branch
+1. C++ code follows LLVM coding standards
+2. TypeScript uses strict mode
+3. All public APIs must have JSDoc comments
+4. Run relevant tests before committing
+5. Use arc lint for code checking
+6. Do not commit directly to master/main, create a topic branch first
 ```
 
 ---
 
-## 模块说明
+## Module Description
 
 ### ecash-lib
 
-**位置**: `modules/ecash-lib/`
-**用途**: eCash 交易构建和签名核心库
+**Location**: `modules/ecash-lib/`
+**Purpose**: Core library for eCash transaction building and signing
 
 ```typescript
 import {
@@ -254,8 +254,8 @@ import {
 
 ### chronik-client
 
-**位置**: `modules/chronik-client/`
-**用途**: Chronik 索引器 API 客户端
+**Location**: `modules/chronik-client/`
+**Purpose**: Chronik indexer API client
 
 ```typescript
 import { ChronikClient } from 'chronik-client';
@@ -264,8 +264,8 @@ const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
 
 ### ecashaddrjs
 
-**位置**: `modules/ecashaddrjs/`
-**用途**: eCash 地址格式编解码
+**Location**: `modules/ecashaddrjs/`
+**Purpose**: eCash address format encoding/decoding
 
 ```typescript
 import ecashaddr from 'ecashaddrjs';
@@ -274,8 +274,8 @@ const { prefix, type, hash } = ecashaddr.decode(address);
 
 ### ecash-wallet
 
-**位置**: `modules/ecash-wallet/`
-**用途**: HD 钱包实现
+**Location**: `modules/ecash-wallet/`
+**Purpose**: HD wallet implementation
 
 ```typescript
 import { Wallet, Mnemonic } from 'ecash-wallet';
@@ -283,137 +283,137 @@ import { Wallet, Mnemonic } from 'ecash-wallet';
 
 ### cashtab
 
-**位置**: `modules/cashtab/`
-**用途**: 全功能 Web 钱包参考实现
+**Location**: `modules/cashtab/`
+**Purpose**: Full-featured Web wallet reference implementation
 
 ---
 
-## 贡献流程
+## Contribution Process
 
-### 1. 环境准备
+### 1. Environment Setup
 
 ```bash
-# 安装 Arcanist (Phabricator CLI)
-# 需要 PHP 7.4+
+# Install Arcanist (Phabricator CLI)
+# Requires PHP 7.4+
 curl -s https://getcomposer.org/installer | php
 composer global require phacility/arcanist
 
-# 添加到 PATH
+# Add to PATH
 echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> ~/.bashrc
 
-# 克隆仓库
+# Clone repository
 git clone ssh://vcs@reviews.bitcoinabc.org:2221/source/bitcoin-abc.git
 cd bitcoin-abc
 ```
 
-### 2. 创建分支
+### 2. Create Branch
 
 ```bash
-# 从 master/main 创建 topic branch
+# Create topic branch from master/main
 git checkout -b 'your-feature-name'
 
-# 或从特定版本创建
+# Or create from specific version
 git checkout -b 'your-feature-name' v0.24.0
 ```
 
-### 3. 开发与提交
+### 3. Development and Commit
 
 ```bash
-# 查看修改
+# View changes
 git status
 git diff
 
-# 提交 (使用英文描述)
-git commit -a -m '描述'
+# Commit (use English description)
+git commit -a -m 'description'
 
-# 创建 diff 进行代码审查
+# Create diff for code review
 arc diff
 
-# 或更新现有 diff
+# Or update existing diff
 arc diff HEAD^
 ```
 
-### 4. 代码审查
+### 4. Code Review
 
 ```bash
-# 审查通过后合并
+# Merge after review approval
 arc land
 
-# 或手动合并
+# Or manual merge
 git checkout master
 git merge your-feature-branch
 git push
 ```
 
-### 代码审查要点
+### Code Review Checklist
 
 ```cpp
-// 检查清单
-1. 是否有内存泄漏 (使用 RAII)
-2. 是否有线程安全问题
-3. 错误处理是否完整
-4. 是否有性能问题
-5. 测试覆盖率是否足够
-6. 文档是否更新
+// Checklist
+1. Any memory leaks (using RAII)
+2. Thread safety issues
+3. Error handling completeness
+4. Performance issues
+5. Test coverage adequacy
+6. Documentation updated
 
-// 常见拒绝原因
-- 违反编码规范
-- 缺少测试
-- 测试失败
-- 内存泄漏
-- 线程不安全
+// Common rejection reasons
+- Violation of coding standards
+- Missing tests
+- Test failures
+- Memory leaks
+- Thread unsafe
 ```
 
 ---
 
-## API 参考
+## API Reference
 
-### 构建 C++ 模块
+### Building C++ Modules
 
 ```bash
-# 在指定目录构建
+# Build in specified directory
 cd modules/ecash-lib
 pnpm install
 pnpm build
 
-# 运行测试
+# Run tests
 pnpm test
 
-# 类型检查
+# Type checking
 pnpm lint
 ```
 
-### 测试工具
+### Testing Tools
 
 ```bash
-# 运行 chronik 功能测试
+# Run chronik functional tests
 ./test/functional/chronik_test
 
-# 运行 ecash-lib 测试
+# Run ecash-lib tests
 pnpm test
 
-# 生成覆盖率报告
+# Generate coverage report
 pnpm coverage
 ```
 
-### 调试工具
+### Debugging Tools
 
 ```bash
-# 启用 ASan (Address Sanitizer)
+# Enable ASan (Address Sanitizer)
 ASAN_OPTIONS=detect_leaks=1 ./bitcoin-abc
 
-# 启用 TSan (Thread Sanitizer)
+# Enable TSan (Thread Sanitizer)
 TSAN_OPTIONS=halt_on_errors=1 ./bitcoin-abc
 
-# 启用 UBSan (Undefined Behavior Sanitizer)
+# Enable UBSan (Undefined Behavior Sanitizer)
 UBSAN_OPTIONS=halt_on_error=1 ./bitcoin-abc
 ```
 
 ---
 
-## 代码示例
+## Code Examples
 
-### 添加新的 ecash-lib 函数
+### Adding New ecash-lib Function
 
 ```typescript
 // modules/ecash-lib/src/myNewFeature.ts
@@ -431,7 +431,7 @@ export function myNewFeature(param1: string): number {
 }
 ```
 
-### 添加测试
+### Adding Tests
 
 ```typescript
 // modules/ecash-lib/tests/myNewFeature.test.ts
@@ -450,7 +450,7 @@ describe('myNewFeature', () => {
 });
 ```
 
-### 文档注释示例
+### Documentation Comments Example
 
 ```cpp
 // src/validation.h
@@ -469,7 +469,6 @@ describe('myNewFeature', () => {
 class TransactionValidator {
 public:
     /**
-
      * @brief Constructs a new transaction validator
      * @param rules The consensus validation rules to use
      * @param coinsView The coins view for UTXO lookup
@@ -479,7 +478,6 @@ public:
         std::shared_ptr<CoinsView> coinsView);
 
     /**
-
      * @brief Validates a transaction
      * @param tx The transaction to validate
      * @returns ValidationResult containing success or error info
@@ -496,50 +494,50 @@ private:
 
 ---
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Issues
 
-**Q: arc diff 失败**
-- 确保已登录 Phabricator: `arc install-certificate`
-- 检查 SSH 密钥配置
-- 确认有代码审查权限
+**Q: arc diff fails**
+- Ensure logged into Phabricator: `arc install-certificate`
+- Check SSH key configuration
+- Confirm code review permissions
 
-**Q: 构建失败**
-- 确保使用支持的编译器版本 (clang-16 或 gcc-12+)
-- 清理构建目录: `rm -rf build && mkdir build`
-- 检查依赖是否完整
+**Q: Build fails**
+- Ensure using supported compiler version (clang-16 or gcc-12+)
+- Clean build directory: `rm -rf build && mkdir build`
+- Check dependencies are complete
 
-**Q: 测试失败**
-- 确保代码是最新的: `git pull`
-- 清理并重新构建
-- 检查测试日志获取详细信息
+**Q: Tests fail**
+- Ensure code is up to date: `git pull`
+- Clean and rebuild
+- Check test logs for details
 
-**Q: pnpm install 失败**
-- 确保 Node 版本 >= 20
-- 清除缓存: `pnpm store prune`
-- 删除 node_modules 重新安装
+**Q: pnpm install fails**
+- Ensure Node version >= 20
+- Clear cache: `pnpm store prune`
+- Delete node_modules and reinstall
 
-**Q: Chronik 测试失败**
-- 确保本地节点正在运行
-- 检查端口 8331 是否可用
-- 查看节点日志
+**Q: Chronik tests fail**
+- Ensure local node is running
+- Check port 8331 is available
+- Check node logs
 
-### 资源链接
+### Resource Links
 
-- **代码审查**: https://reviews.bitcoinabc.org
-- **问题追踪**: https://reviews.bitcoinabc.org/maniphest
-- **开发 Telegram**: https://t.me/eCashDevelopment
-- **文档**: https://github.com/Bitcoin-ABC/bitcoin-abc/tree/master/doc
+- **Code Review**: https://reviews.bitcoinabc.org
+- **Issue Tracking**: https://reviews.bitcoinabc.org/maniphest
+- **Development Telegram**: https://t.me/eCashDevelopment
+- **Documentation**: https://github.com/Bitcoin-ABC/bitcoin-abc/tree/master/doc
 
-### 版本兼容性
+### Version Compatibility
 
 ```bash
-# 检查各模块版本要求
+# Check module version requirements
 cat modules/ecash-lib/package.json | grep '"version"'
 cat modules/chronik-client/package.json | grep '"version"'
 
-# Node 兼容性
-node --version  # 需要 >= 20
-pnpm --version  # 需要 >= 8
+# Node Compatibility
+node --version  # requires >= 20
+pnpm --version  # requires >= 8
 ```

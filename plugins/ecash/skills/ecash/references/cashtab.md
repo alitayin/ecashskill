@@ -7,69 +7,69 @@ tags: [wallet, web, reference, implementation, badger]
 
 # Cashtab
 
-全功能的 eCash 网页钱包应用，作为 eCash 生态系统的参考实现。
+Full-featured eCash web wallet application, serving as a reference implementation for the eCash ecosystem.
 
-## 概述
+## Overview
 
-Cashtab 是 eCash 官方网页钱包：
-- XEC 和 eToken 收发
-- BIP39 助记词导入
-- 消息签名
-- SLP/ALP Token 支持
-- 浏览器扩展（Chrome/Brave）
-- Docker 部署
+Cashtab is the official eCash web wallet:
+- XEC and eToken sending/receiving
+- BIP39 mnemonic import
+- Message signing
+- SLP/ALP Token support
+- Browser extension (Chrome/Brave)
+- Docker deployment
 
-**官网**: https://wallet.badger.cash/
-**仓库**: github.com/badger-cash/cashtab
-**前端框架**: React 17 + Ant Design
+**Website**: https://wallet.badger.cash/
+**Repository**: github.com/badger-cash/cashtab
+**Frontend Framework**: React 17 + Ant Design
 
 ---
 
-## Claude Code 使用指南
+## Claude Code Usage Guide
 
-### 技术栈
+### Tech Stack
 
 ```
-前端: React 17 + React Router
+Frontend: React 17 + React Router
 UI: Ant Design
-钱包库: bcash (forked)
-地址处理: ecashaddrjs
-存储: localforage (IndexedDB)
-大数运算: bignumber.js
-二维码: zxing/library
+Wallet Library: bcash (forked)
+Address Handling: ecashaddrjs
+Storage: localforage (IndexedDB)
+Big Number: bignumber.js
+QR Code: zxing/library
 ```
 
-### 核心架构
+### Core Architecture
 
-#### 目录结构
+#### Directory Structure
 
 ```
 src/
 ├── components/
-│   ├── Authentication/   # 钱包解锁/认证
-│   ├── Common/          # 共享组件 (QRCode, BalanceHeader, Ticker)
-│   ├── Configure/      # 设置
-│   ├── OnBoarding/     # 新钱包创建
-│   ├── Send/           # 发送 XEC/eTokens
-│   ├── Tokens/         # Token 管理
-│   └── Wallet/         # 主钱包视图
+│   ├── Authentication/   # Wallet unlock/authentication
+│   ├── Common/          # Shared components (QRCode, BalanceHeader, Ticker)
+│   ├── Configure/      # Settings
+│   ├── OnBoarding/     # New wallet creation
+│   ├── Send/           # Send XEC/eTokens
+│   ├── Tokens/         # Token management
+│   └── Wallet/         # Main wallet view
 ├── hooks/
-│   ├── useWallet.js    # 核心钱包状态
-│   └── useBCH.js       # 区块链交互
+│   ├── useWallet.js    # Core wallet state
+│   └── useBCH.js       # Blockchain interaction
 ├── utils/
-│   ├── cashMethods.js  # 余额格式化、地址转换
-│   ├── tokenMethods.js # Token 工具
+│   ├── cashMethods.js  # Balance formatting, address conversion
+│   ├── tokenMethods.js # Token utilities
 │   ├── context.js      # React Context
-│   └── validation.js   # 输入验证
+│   └── validation.js   # Input validation
 ```
 
-#### 状态管理
+#### State Management
 
 ```typescript
-// WalletContext 提供全局钱包状态
+// WalletContext provides global wallet state
 const { wallet, balance, tokens, sendTx } = useWallet();
 
-// 钱包对象结构
+// Wallet object structure
 {
   mnemonic: string,
   Path245: { cashAddress, slpAddress, legacyAddress, publicKey },
@@ -84,76 +84,76 @@ const { wallet, balance, tokens, sendTx } = useWallet();
 }
 ```
 
-### BIP44 派生路径
+### BIP44 Derivation Path
 
-Cashtab 支持三种派生路径：
+Cashtab supports three derivation paths:
 
-| 路径 | 用途 | Coin Type |
-|------|------|-----------|
-| `m/44'/245'/0'/0/0` | Path245 (主路径) | 245 |
+| Path | Purpose | Coin Type |
+|------|--------|-----------|
+| `m/44'/245'/0'/0/0` | Path245 (main) | 245 |
 | `m/44'/145'/0'/0/0` | Path145 | 145 |
 | `m/44'/1899'/0'/0/0` | Path1899 (eCash) | 1899 |
 
-### API 调用
+### API Calls
 
-Cashtab 使用 bcash 后端 REST API：
+Cashtab uses bcash backend REST API:
 
 ```javascript
-// 环境变量
+// Environment variables
 REACT_APP_BCASH_API=https://ecash.badger.cash:8332
 
-// 获取地址 UTXO
+// Get address UTXO
 GET /coin/address/{address}?slp=true
 
-// 获取交易历史
+// Get transaction history
 GET /tx/address/{address}?slp=true&limit=30&reverse=true
 
-// 获取 Token 信息
+// Get Token information
 GET /token/{tokenId}
 
-// 获取特定 UTXO
+// Get specific UTXO
 GET /coin/{hash}/{index}?slp=true
 ```
 
-### 关键模式
+### Key Patterns
 
-#### 地址转换
+#### Address Conversion
 
 ```typescript
 import ecashaddr from 'ecashaddrjs';
 
-// eCash 地址转换
+// eCash address conversion
 function convertAddress(address, fromPrefix, toPrefix) {
   const { type, hash } = ecashaddr.decode(address);
   return ecashaddr.encode(toPrefix, type, hash);
 }
 
-// 示例
+// Example
 convertAddress('ecash:q...', 'ecash', 'simpleledger');
 ```
 
-#### 余额格式化
+#### Balance Formatting
 
 ```typescript
 import { fromSmallestDenomination } from './cashMethods';
 
-// XEC 格式化 (1 XEC = 100 satoshis)
+// XEC formatting (1 XEC = 100 satoshis)
 const xecBalance = fromSmallestDenomination(balanceSats, 2); // 2 decimals
 // 1000000 sats = 10000.00 XEC
 
-// Token 格式化
+// Token formatting
 const tokenBalance = fromSmallestDenomination(tokenSats, tokenDecimals);
 ```
 
-#### Token 操作
+#### Token Operations
 
 ```typescript
-// SLP Token 转账
+// SLP Token transfer
 async function sendToken(toAddress, tokenId, quantity, decimals) {
-  // 构建 OP_RETURN 输出
+  // Build OP_RETURN output
   const opReturn = buildSlpOpReturn(tokenId, 'SEND', quantity, decimals);
 
-  // 构建交易
+  // Build transaction
   const tx = await buildTransaction({
     inputs: selectedUtxos,
     outputs: [
@@ -166,30 +166,30 @@ async function sendToken(toAddress, tokenId, quantity, decimals) {
 }
 ```
 
-### 提示词模板
+### Prompt Templates
 
 ```
-我需要了解 Cashtab 的钱包架构
+I need to understand Cashtab's wallet architecture
 
-我需要实现类似 Cashtab 的余额显示
+I need to implement balance display similar to Cashtab
 
-我需要实现 SLP Token 转账
+I need to implement SLP Token transfer
 
-我需要实现地址格式转换
+I need to implement address format conversion
 
-我需要了解 Cashtab 的状态管理模式
+I need to understand Cashtab's state management pattern
 ```
 
 ---
 
-## Cursor 规则配置
+## Cursor Rules Configuration
 
-### .cursorrules 片段
+### .cursorrules Snippet
 
 ```yaml
-# Cashtab 参考配置
+# Cashtab Reference Configuration
 - name: "cashtab"
-  description: "Cashtab eCash 钱包参考实现"
+  description: "Cashtab eCash wallet reference implementation"
   files:
     - "**/*wallet*"
     - "**/*cashtab*"
@@ -198,96 +198,96 @@ async function sendToken(toAddress, tokenId, quantity, decimals) {
   rules:
     - type: "dependencies"
       statement: |
-        # Cashtab 使用的核心库
-        - bcash (forked): 交易构建和签名
-        - ecashaddrjs: 地址编解码
-        - localforage: IndexedDB 存储
-        - bignumber.js: 精度计算
+        # Core libraries used by Cashtab
+        - bcash (forked): Transaction building and signing
+        - ecashaddrjs: Address encoding/decoding
+        - localforage: IndexedDB storage
+        - bignumber.js: Precision calculation
 
     - type: "derivation-paths"
       statement: |
-        # BIP44 派生路径
-        - Path245: m/44'/245'/0'/0/0 (主)
+        # BIP44 Derivation Paths
+        - Path245: m/44'/245'/0'/0/0 (main)
         - Path145: m/44'/145'/0'/0/0
         - Path1899: m/44'/1899'/0'/0/0 (eCash)
 
     - type: "address-types"
       statement: |
-        # 支持的地址格式
+        # Supported address formats
         - cashAddress: ecash:q...
         - slpAddress: simpleledger:q...
-        - legacyAddress: 1... 或 3...
+        - legacyAddress: 1... or 3...
         - etokenAddress: etoken:q...
 
     - type: "bip70"
       statement: |
-        # BIP70 支付协议支持
-        - 使用 b70 库处理 PaymentDetails
-        - 支持 Simple Ledger Payment Protocol
+        # BIP70 payment protocol support
+        - Use b70 library for PaymentDetails
+        - Support Simple Ledger Payment Protocol
 
     - type: "storage"
       statement: |
-        # 存储策略
-        - localforage (IndexedDB) 优先
-        - fallback 到 localStorage
-        - 钱包加密存储
+        # Storage strategy
+        - Prefer localforage (IndexedDB)
+        - Fallback to localStorage
+        - Encrypted wallet storage
 
     - type: "state-management"
       statement: |
-        # React Context 模式
-        - WalletContext: 钱包状态
-        - AuthenticationContext: 认证状态
-        - useWallet hook 访问状态
+        # React Context pattern
+        - WalletContext: Wallet state
+        - AuthenticationContext: Authentication state
+        - useWallet hook for state access
 ```
 
-### AI 角色设定
+### AI Role Settings
 
 ```
-当参考 Cashtab 实现 eCash 功能时：
+When referencing Cashtab to implement eCash features:
 
-1. 使用 React Context 管理全局状态
-2. BIP44 派生路径使用 Path1899 (coin type 1899)
-3. 地址转换使用 ecashaddrjs
-4. 金额计算使用 bignumber.js 避免精度问题
-5. SLP Token 使用 OP_RETURN 编码
-6. 优先使用 IndexedDB (localforage) 存储
-7. 浏览器扩展使用 chrome.storage
+1. Use React Context for global state management
+2. BIP44 derivation path uses Path1899 (coin type 1899)
+3. Address conversion uses ecashaddrjs
+4. Amount calculation uses bignumber.js to avoid precision issues
+5. SLP Token uses OP_RETURN encoding
+6. Prefer IndexedDB (localforage) for storage
+7. Browser extension uses chrome.storage
 ```
 
 ---
 
-## API 参考
+## API Reference
 
 ### cashMethods.js
 
 ```typescript
-// 格式化余额
+// Format balance
 fromSmallestDenomination(sats: number, decimals: number): string
 toSmallestDenomination(amount: string, decimals: number): bigint
 
-// 地址验证
+// Address validation
 isValidAddress(address: string): boolean
 isValidEcashAddress(address: string): boolean
 
-// 地址转换
+// Address conversion
 convertPrefix(address: string, newPrefix: string): string
 ```
 
 ### tokenMethods.js
 
 ```typescript
-// SLP OP_RETURN 构建
+// SLP OP_RETURN building
 buildSlpOpReturn(tokenId: string, type: string, quantity: bigint, decimals: number): Uint8Array
 
-// Token ID 验证
+// Token ID validation
 isValidTokenId(tokenId: string): boolean
 
-// Token 数量格式化
+// Token quantity formatting
 formatTokenQuantity(quantity: bigint, decimals: number): string
 parseTokenQuantity(amount: string, decimals: number): bigint
 ```
 
-### OP_RETURN 编码
+### OP_RETURN Encoding
 
 ```typescript
 // eToken prefix
@@ -299,12 +299,12 @@ const CASHTAB_PREFIX = '6a0400746162'; // OP_RETURN + tab
 
 ---
 
-## 代码示例
+## Code Examples
 
-### 钱包状态 Hook
+### Wallet State Hook
 
 ```typescript
-// useWallet.js 参考实现
+// useWallet.js reference implementation
 import { createContext, useContext } from 'react';
 import { WalletContext } from './context';
 
@@ -316,7 +316,7 @@ export function useWallet() {
   return context;
 }
 
-// 使用
+// Usage
 function BalanceDisplay() {
   const { wallet, loading } = useWallet();
 
@@ -331,10 +331,10 @@ function BalanceDisplay() {
 }
 ```
 
-### 地址派生
+### Address Derivation
 
 ```typescript
-// 参考 bcash 的 BIP44 派生
+// Reference bcash BIP44 derivation
 import { HD } from 'bcash';
 
 function deriveAddress(mnemonic, path) {
@@ -353,44 +353,44 @@ function deriveAddress(mnemonic, path) {
 }
 ```
 
-### 发送交易
+### Send Transaction
 
 ```typescript
-// 参考 Send 组件的发送逻辑
+// Reference Send component sending logic
 async function sendXec(toAddress, amountSats) {
-  // 1. 获取可用 UTXO
+  // 1. Get available UTXOs
   const utxos = await fetchUtxos(wallet.address);
 
-  // 2. 选择 UTXO (贪心算法)
+  // 2. Select UTXOs (greedy algorithm)
   const selectedUtxos = selectUtxos(utxos, amountSats);
 
-  // 3. 构建交易
+  // 3. Build transaction
   const mtX = new MTX();
   mtX.addOutput(toAddress, amountSats);
 
-  // 添加找零
+  // Add change
   const change = totalInput - amountSats - fee;
   if (change > 0) {
     mtX.addOutput(wallet.address, change);
   }
 
-  // 4. 签名
+  // 4. Sign
   for (const utxo of selectedUtxos) {
     mtX.sign(utxo.keyring);
   }
 
-  // 5. 广播
+  // 5. Broadcast
   const rawTx = mtX.toString();
   return await broadcastTx(rawTx);
 }
 ```
 
-### Token 转账
+### Token Transfer
 
 ```typescript
-// SLP Token 转账参考
+// SLP Token transfer reference
 function buildSlpSend(tokenId, toAddress, quantity, decimals) {
-  // 1. 构建 OP_RETURN
+  // 1. Build OP_RETURN
   const opReturn = new Script([
     Opcode.OP_RETURN,
     Buffer.from('SLP', 'ascii'),
@@ -399,7 +399,7 @@ function buildSlpSend(tokenId, toAddress, quantity, decimals) {
     encodeQuantity(quantity, decimals),
   ]);
 
-  // 2. 构建 Token 输出 (Qty=0 表示只发送 token，不发送 XEC)
+  // 2. Build Token output (Qty=0 means only send token, not XEC)
   const tokenOutput = new Script([
     Opcode.OP_RETURN,
     tokenId,
@@ -407,63 +407,63 @@ function buildSlpSend(tokenId, toAddress, quantity, decimals) {
     encodeQuantity(quantity, decimals),
   ]);
 
-  // 3. 构建交易
+  // 3. Build transaction
   // ...
 }
 ```
 
 ---
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Issues
 
-**Q: 钱包导入失败**
-- 检查 BIP39 助记词有效性
-- 确认 12/24 词格式正确
-- 验证派生路径
+**Q: Wallet import fails**
+- Check BIP39 mnemonic validity
+- Confirm 12/24 word format is correct
+- Verify derivation path
 
-**Q: 余额显示不正确**
-- 检查 API 端点是否可访问
-- 确认地址格式正确
-- 验证解析精度
+**Q: Balance display incorrect**
+- Check if API endpoint is accessible
+- Confirm address format is correct
+- Verify parsing precision
 
-**Q: 交易广播失败**
-- 检查网络连接
-- 验证交易费用足够
-- 确认 UTXO 可花费
+**Q: Transaction broadcast fails**
+- Check network connection
+- Verify transaction fee is sufficient
+- Confirm UTXO is spendable
 
-**Q: Token 不显示**
-- 检查 Token ID 是否正确
-- 确认 Token 类型 (SLP/ALP)
-- 验证 OP_RETURN 编码
+**Q: Token not displaying**
+- Check if Token ID is correct
+- Confirm Token type (SLP/ALP)
+- Verify OP_RETURN encoding
 
-### 调试技巧
+### Debugging Tips
 
 ```typescript
-// 启用调试日志
+// Enable debug logs
 localStorage.setItem('debug', 'true');
 
-// 查看钱包状态
+// View wallet state
 console.log('Wallet:', wallet);
 
-// 查看 API 响应
+// View API response
 console.log('UTXOs:', utxos);
 
-// 检查派生
+// Check derivation
 console.log('Derived address:', derivedAddress);
 ```
 
-### 浏览器扩展集成
+### Browser Extension Integration
 
 ```typescript
-// 检测 Cashtab 扩展
+// Detect Cashtab extension
 if (window.bitcoinAbc === 'cashtab') {
-  // 使用扩展连接
+  // Use extension connection
   const address = await window.bitcoinAbc.requestAddress();
 }
 
-// 扩展消息协议
+// Extension message protocol
 window.postMessage({
   type: 'FROM_PAGE',
   addressRequest: true,
@@ -472,9 +472,9 @@ window.postMessage({
 
 ---
 
-## 相关链接
+## Related Links
 
-- **Cashtab 官网**: https://wallet.badger.cash/
+- **Cashtab Website**: https://wallet.badger.cash/
 - **GitHub**: https://github.com/badger-cash/cashtab
 - **bcash fork**: https://github.com/badger-cash/bcash
-- **bcash 文档**: https://github.com/badger-cash/bcash/blob/webpack-ecash/docs/
+- **bcash documentation**: https://github.com/badger-cash/bcash/blob/webpack-ecash/docs/

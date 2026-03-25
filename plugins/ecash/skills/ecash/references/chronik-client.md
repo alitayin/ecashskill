@@ -7,81 +7,81 @@ tags: [chronik, blockchain, indexer, websocket, api]
 
 # chronik-client
 
-Chronik Indexer API 的 JavaScript/TypeScript 客户端，用于访问 eCash 区块链索引数据。
+JavaScript/TypeScript client for Chronik Indexer API, used to access eCash blockchain indexed data.
 
-## 概述
+## Overview
 
-chronik-client 提供了访问 Chronik 索引器的方法，支持：
-- 交易查询（已确认和未确认）
-- 地址/脚本历史查询
-- UTXO 查询
-- Token 信息查询（SLP/ALP）
-- 区块链区块查询
-- WebSocket 实时订阅
-- 交易广播
+chronik-client provides methods to access the Chronik indexer:
+- Transaction queries (confirmed and unconfirmed)
+- Address/script history queries
+- UTXO queries
+- Token information queries (SLP/ALP)
+- Blockchain block queries
+- WebSocket real-time subscriptions
+- Transaction broadcasting
 
 **npm**: `chronik-client`
-**版本**: v4.1.0
-**官方文档**: https://chronik.e.cash/
+**Version**: v4.1.0
+**Official Documentation**: https://chronik.e.cash/
 
 ---
 
-## Claude Code 使用指南
+## Claude Code Usage Guide
 
-### 安装
+### Installation
 
 ```bash
 npm install chronik-client
 ```
 
-### 初始化客户端
+### Initialize Client
 
 ```typescript
 import { ChronikClient, ConnectionStrategy } from 'chronik-client';
 
-// 方式1: 直接连接
+// Method 1: Direct connection
 const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
 
-// 方式2: 自动选择延迟最低的节点
+// Method 2: Auto-select node with lowest latency
 const chronik = await ChronikClient.useStrategy(
   ConnectionStrategy.ClosestFirst,
   ['https://chronik1.example.com', 'https://chronik2.example.com']
 );
 ```
 
-### 常用查询
+### Common Queries
 
 ```typescript
-// 查询交易
+// Query transaction
 const tx = await chronik.tx('0f3c3908a2ddec8dea91d2fe1f77295bbbb158af869bff345d44ae800f0a5498');
 
-// 查询地址 UTXO
+// Query address UTXOs
 const utxos = await chronik.address('ecash:qzahkehkauy0vy4jr4pmrhhttz5hqxxxxx').utxos();
 
-// 查询地址历史
+// Query address history
 const history = await chronik.address('ecash:qzahkehkauy0vy4jr4pmrhhttz5hqxxxxx').history(0, 50);
 
-// 查询 Token 信息
+// Query Token information
 const token = await chronik.token('token_id_here');
 
-// 查询区块
+// Query block
 const block = await chronik.block(800000);
 ```
 
-### 交易广播
+### Transaction Broadcasting
 
 ```typescript
-// 广播交易
+// Broadcast transaction
 const result = await chronik.broadcastTx('raw_tx_hex_here');
 
-// 广播并等待确认
+// Broadcast and wait for confirmation
 const result = await chronik.broadcastAndFinalizeTx('raw_tx_hex_here');
 
-// 验证交易
+// Validate transaction
 const validation = await chronik.validateRawTx('raw_tx_hex_here');
 ```
 
-### WebSocket 实时订阅
+### WebSocket Real-time Subscriptions
 
 ```typescript
 const ws = chronik.ws({
@@ -97,41 +97,41 @@ const ws = chronik.ws({
 
 await ws.waitForOpen();
 
-// 订阅区块通知
+// Subscribe to block notifications
 ws.subscribeToBlocks();
 
-// 订阅特定地址
+// Subscribe to specific address
 ws.subscribeToAddress('ecash:qzahkehkauy0vy4jr4pmrhhttz5hqxxxxx');
 
-// 订阅所有交易
+// Subscribe to all transactions
 ws.subscribeToTxs();
 
-// 订阅 Token
+// Subscribe to Token
 ws.subscribeToTokenId('token_id_here');
 ```
 
-### 提示词模板
+### Prompt Templates
 
 ```
-我需要查询地址 [address] 的所有 UTXO
+I need to query all UTXOs for address [address]
 
-我需要获取交易 [txid] 的详细信息
+I need to get detailed information for transaction [txid]
 
-我需要监听 [address] 的新交易通知
+I need to subscribe to new transaction notifications for [address]
 
-我需要广播一个已签名的交易
+I need to broadcast a signed transaction
 ```
 
 ---
 
-## Cursor 规则配置
+## Cursor Rules Configuration
 
-### .cursorrules 片段
+### .cursorrules Snippet
 
 ```yaml
-# chronik-client 配置
+# chronik-client Configuration
 - name: "chronik-client"
-  description: "eCash Chronik Indexer API 客户端配置"
+  description: "eCash Chronik Indexer API client configuration"
   files:
     - "**/*chronik*"
     - "**/wallet/**/*.ts"
@@ -143,7 +143,7 @@ ws.subscribeToTokenId('token_id_here');
 
     - type: "best-practice"
       statement: |
-        // 推荐使用 ConnectionStrategy.ClosestFirst 自动选择最优节点
+        // Recommended to use ConnectionStrategy.ClosestFirst for auto-selecting optimal node
         const chronik = await ChronikClient.useStrategy(
           ConnectionStrategy.ClosestFirst,
           ['https://chronik.be.cash/xec']
@@ -151,7 +151,7 @@ ws.subscribeToTokenId('token_id_here');
 
     - type: "error-handling"
       statement: |
-        // 处理 chronik 连接错误
+        // Handle chronik connection errors
         try {
           const tx = await chronik.tx(txid);
         } catch (error) {
@@ -164,7 +164,7 @@ ws.subscribeToTokenId('token_id_here');
 
     - type: "websocket"
       statement: |
-        // WebSocket 订阅后记得处理断开重连
+        // Remember to handle disconnection and reconnection after WebSocket subscription
         const ws = chronik.ws({
           onMessage: handleMessage,
           onReconnect: (e) => console.log('Reconnecting...'),
@@ -173,75 +173,75 @@ ws.subscribeToTokenId('token_id_here');
         });
 ```
 
-### AI 角色设定
+### AI Role Settings
 
 ```
-当你编写涉及 chronik-client 的代码时：
+When writing code involving chronik-client:
 
-1. 使用 ConnectionStrategy.ClosestFirst 作为默认连接策略
-2. WebSocket 订阅总是设置 autoReconnect: true 和 keepAlive: true
-3. 查询方法返回 Promise，注意使用 async/await
-4. 交易广播后建议使用 broadcastAndFinalizeTx 等待确认
-5. 地址查询使用便捷方法 chronik.address() 而不是 script()
+1. Use ConnectionStrategy.ClosestFirst as default connection strategy
+2. WebSocket subscriptions always set autoReconnect: true and keepAlive: true
+3. Query methods return Promise, remember to use async/await
+4. After transaction broadcasting, recommend using broadcastAndFinalizeTx to wait for confirmation
+5. Use convenience method chronik.address() for address queries instead of script()
 ```
 
 ---
 
-## API 参考
+## API Reference
 
 ### ChronikClient
 
-| 方法 | 描述 |
+| Method | Description |
 |------|------|
-| `tx(txid)` | 查询交易详情 |
-| `rawTx(txid)` | 查询原始交易 |
-| `address(addr)` | 查询地址（返回 ScriptEndpoint） |
-| `script(type, payload)` | 查询脚本 |
-| `block(hashOrHeight)` | 查询区块 |
-| `blocks(start, end)` | 查询区块范围 |
-| `token(tokenId)` | 查询 Token |
-| `broadcastTx(rawTx)` | 广播交易 |
-| `broadcastAndFinalizeTx(rawTx)` | 广播并等待确认 |
-| `validateRawTx(rawTx)` | 验证交易 |
-| `chronikInfo()` | 获取 Chronik 服务信息 |
-| `blockchainInfo()` | 获取区块链信息 |
-| `ws(options)` | 创建 WebSocket 连接 |
+| `tx(txid)` | Query transaction details |
+| `rawTx(txid)` | Query raw transaction |
+| `address(addr)` | Query address (returns ScriptEndpoint) |
+| `script(type, payload)` | Query script |
+| `block(hashOrHeight)` | Query block |
+| `blocks(start, end)` | Query block range |
+| `token(tokenId)` | Query Token |
+| `broadcastTx(rawTx)` | Broadcast transaction |
+| `broadcastAndFinalizeTx(rawTx)` | Broadcast and wait for confirmation |
+| `validateRawTx(rawTx)` | Validate transaction |
+| `chronikInfo()` | Get Chronik service information |
+| `blockchainInfo()` | Get blockchain information |
+| `ws(options)` | Create WebSocket connection |
 
 ### ScriptEndpoint
 
-| 方法 | 描述 |
+| Method | Description |
 |------|------|
-| `.utxos()` | 获取 UTXO |
-| `.history(page, pageSize)` | 获取历史交易 |
-| `.confirmedTxs(page, pageSize)` | 获取已确认交易 |
-| `.unconfirmedTxs()` | 获取未确认交易 |
+| `.utxos()` | Get UTXOs |
+| `.history(page, pageSize)` | Get transaction history |
+| `.confirmedTxs(page, pageSize)` | Get confirmed transactions |
+| `.unconfirmedTxs()` | Get unconfirmed transactions |
 
 ### TokenIdEndpoint
 
-| 方法 | 描述 |
+| Method | Description |
 |------|------|
-| `.utxos()` | 获取 Token UTXO |
-| `.history(page, pageSize)` | 获取 Token 历史 |
-| `.confirmedTxs(page, pageSize)` | 获取已确认 Token 交易 |
-| `.unconfirmedTxs()` | 获取未确认 Token 交易 |
+| `.utxos()` | Get Token UTXOs |
+| `.history(page, pageSize)` | Get Token history |
+| `.confirmedTxs(page, pageSize)` | Get confirmed Token transactions |
+| `.unconfirmedTxs()` | Get unconfirmed Token transactions |
 
-### 支持的 Script 类型
+### Supported Script Types
 
 - `p2pk` - Pay to Public Key
 - `p2pkh` - Pay to Public Key Hash
 - `p2sh` - Pay to Script Hash
 - `p2tr` - Pay to Taproot
 
-### 支持的 Token 协议
+### Supported Token Protocols
 
 - **ALP** (Airdrop Lottery Protocol)
-- **SLP** (Simple Ledger Protocol) - 包括 NFT1
+- **SLP** (Simple Ledger Protocol) - including NFT1
 
 ---
 
-## 代码示例
+## Code Examples
 
-### 完整的钱包监听示例
+### Complete Wallet Monitor Example
 
 ```typescript
 import { ChronikClient, ConnectionStrategy } from 'chronik-client';
@@ -300,61 +300,61 @@ class WalletMonitor {
 }
 ```
 
-### 错误处理
+### Error Handling
 
 ```typescript
-// 处理常见错误
+// Handle common errors
 async function safeQuery(chronik: ChronikClient, txid: string) {
   try {
     return await chronik.tx(txid);
   } catch (err: any) {
     if (err.message.includes('Not Found') || err.message.includes('404')) {
-      return null; // 交易不存在
+      return null; // Transaction does not exist
     }
     if (err.message.includes('timeout') || err.message.includes('ECONNREFUSED')) {
-      throw new Error('Chronik 节点不可用，请稍后重试');
+      throw new Error('Chronik node unavailable, please retry later');
     }
-    throw err; // 其他错误继续抛出
+    throw err; // Other errors continue to throw
   }
 }
 ```
 
 ---
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Issues
 
-**Q: WebSocket 频繁断开**
+**Q: WebSocket frequently disconnects**
 ```typescript
-// 确保设置 keepAlive 和 autoReconnect
+// Ensure keepAlive and autoReconnect are set
 const ws = chronik.ws({
   keepAlive: true,
   autoReconnect: true,
 });
 ```
 
-**Q: 交易查询返回 404**
-- 检查 txid 是否正确（64字符十六进制）
-- 交易可能还未被索引（等待几秒后重试）
+**Q: Transaction query returns 404**
+- Check if txid is correct (64-character hex)
+- Transaction may not yet be indexed (wait a few seconds and retry)
 
-**Q: 地址格式问题**
-- 确保使用完整的 CashAddr 格式：`ecash:q...`
-- 或使用 `bitcoincash:q...` 等前缀
+**Q: Address format issue**
+- Ensure using full CashAddr format: `ecash:q...`
+- Or use prefixes like `bitcoincash:q...`
 
-**Q: 广播失败**
-- 使用 `validateRawTx` 先验证交易
-- 检查交易费用是否足够
+**Q: Broadcast fails**
+- Use `validateRawTx` to validate transaction first
+- Check if transaction fee is sufficient
 
-### 推荐的 Chronik 节点
+### Recommended Chronik Nodes
 
 - `https://chronik.be.cash/xec`
-- `https://chronik索引.e.cash` (官方)
+- `https://chronik.e.cash` (official)
 
-### 调试技巧
+### Debugging Tips
 
 ```typescript
-// 开启详细日志
+// Enable detailed logs
 const chronik = new ChronikClient(['https://chronik.be.cash/xec'], {
   timeout: 30000,
   debug: true,

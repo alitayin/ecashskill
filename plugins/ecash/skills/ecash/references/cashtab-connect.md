@@ -7,86 +7,86 @@ tags: [wallet, dapp, extension, browser, connection]
 
 # cashtab-connect
 
-用于连接 Cashtab 浏览器扩展钱包的 DApp 开发库。
+DApp development library for connecting to Cashtab browser extension wallet.
 
-## 概述
+## Overview
 
-cashtab-connect 提供：
-- 钱包地址请求
-- XEC 转账
-- Token 转账
-- BIP21 URI 支持
-- 完整的错误处理
-- TypeScript 类型支持
+cashtab-connect provides:
+- Wallet address requests
+- XEC transfers
+- Token transfers
+- BIP21 URI support
+- Complete error handling
+- TypeScript type support
 
 **npm**: `cashtab-connect`
-**版本**: 1.1.0
-**官方仓库**: github.com/Bitcoin-ABC/bitcoin-abc (modules/cashtab-connect)
+**Version**: 1.1.0
+**Official Repository**: github.com/Bitcoin-ABC/bitcoin-abc (modules/cashtab-connect)
 
 ---
 
-## Claude Code 使用指南
+## Claude Code Usage Guide
 
-### 安装
+### Installation
 
 ```bash
 npm install cashtab-connect
 ```
 
-### 基础用法
+### Basic Usage
 
 ```typescript
 import { CashtabConnect } from 'cashtab-connect';
 
 const cashtab = new CashtabConnect();
 
-// 等待扩展安装
+// Wait for extension installation
 await cashtab.waitForExtension();
 
-// 请求用户地址
+// Request user address
 const address = await cashtab.requestAddress();
 console.log('User address:', address);
 ```
 
-### 发送 XEC
+### Sending XEC
 
 ```typescript
-// 发送 XEC
+// Send XEC
 await cashtab.sendXec(
   'ecash:qp3wj05au4l7q2m5ng4qg0vpeejl42lvl0nqj8q0q0',
-  '1000.12'  // 可以是字符串或数字
+  '1000.12'  // Can be string or number
 );
 ```
 
-### 发送 Token
+### Sending Token
 
 ```typescript
 await cashtab.sendToken(
   'ecash:qp3wj05au4l7q2m5ng4qg0vpeejl42lvl0nqj8q0q0',
   'token_id_here',
-  '100.5'  // 代币数量（支持小数）
+  '100.5'  // Token quantity (supports decimals)
 );
 ```
 
-### BIP21 支付
+### BIP21 Payment
 
 ```typescript
-// 使用 BIP21 URI 创建交易
+// Use BIP21 URI to create transaction
 await cashtab.sendBip21('ecash:qp3wj05au4l7q2m5ng4qg0vpeejl42lvl0nqj8q0q0?amount=100');
 
-// 从 BIP21 创建交易
+// Create transaction from BIP21
 const tx = cashtab.createTransactionFromBip21('ecash:qp3wj05au4l7q2m5ng4qg0vpeejl42lvl0nqj8q0q0?amount=50&message=Payment');
 ```
 
-### 检查扩展可用性
+### Check Extension Availability
 
 ```typescript
-// 同步检查
+// Synchronous check
 if (cashtab.isExtensionAvailable()) {
   console.log('Cashtab extension is installed');
 }
 
-// 异步等待
+// Asynchronous wait
 try {
   await cashtab.waitForExtension();
   console.log('Extension is ready');
@@ -95,37 +95,37 @@ try {
 }
 ```
 
-### 清理资源
+### Cleanup Resources
 
 ```typescript
-// 移除事件监听器
+// Remove event listeners
 cashtab.destroy();
 ```
 
-### 提示词模板
+### Prompt Templates
 
 ```
-我需要连接用户的 Cashtab 钱包
+I need to connect to user's Cashtab wallet
 
-我需要请求用户的 eCash 地址
+I need to request user's eCash address
 
-我需要通过 Cashtab 发送 XEC
+I need to send XEC through Cashtab
 
-我需要通过 Cashtab 发送 Token
+I need to send Token through Cashtab
 
-我需要处理钱包未安装的情况
+I need to handle the case where wallet is not installed
 ```
 
 ---
 
-## Cursor 规则配置
+## Cursor Rules Configuration
 
-### .cursorrules 片段
+### .cursorrules Snippet
 
 ```yaml
-# cashtab-connect 配置
+# cashtab-connect Configuration
 - name: "cashtab-connect"
-  description: "Cashtab 浏览器扩展钱包连接"
+  description: "Cashtab browser extension wallet connection"
   files:
     - "**/*cashtab*"
     - "**/*wallet*connect*"
@@ -143,52 +143,52 @@ cashtab.destroy();
 
     - type: "initialization"
       statement: |
-        // 初始化 CashtabConnect
+        // Initialize CashtabConnect
         const cashtab = new CashtabConnect({
           timeout: 30000,
-          extensionNotAvailableMessage: '请安装 Cashtab 钱包',
-          addressDeniedMessage: '用户拒绝了地址请求',
+          extensionNotAvailableMessage: 'Please install Cashtab wallet',
+          addressDeniedMessage: 'User denied address request',
         });
 
     - type: "error-handling"
       statement: |
-        // 错误处理模式
+        // Error handling pattern
         try {
           const address = await cashtab.requestAddress();
         } catch (error) {
           if (error instanceof CashtabExtensionUnavailableError) {
-            // 引导用户安装扩展
+            // Guide user to install extension
           } else if (error instanceof CashtabAddressDeniedError) {
-            // 用户拒绝
+            // User denied
           } else if (error instanceof CashtabTimeoutError) {
-            // 超时
+            // Timeout
           }
         }
 
     - type: "cleanup"
       statement: |
-        // 组件卸载时清理
+        // Cleanup on component unmount
         useEffect(() => {
           return () => cashtab.destroy();
         }, []);
 ```
 
-### AI 角色设定
+### AI Role Settings
 
 ```
-当你使用 cashtab-connect 时：
+When using cashtab-connect:
 
-1. 先调用 waitForExtension() 确保扩展可用
-2. 使用 isExtensionAvailable() 做预检查
-3. 金额参数可以是字符串或数字
-4. 总是处理四种错误类型
-5. 组件卸载时调用 destroy()
-6. 不要在生产环境硬编码超时时间
+1. Call waitForExtension() first to ensure extension is available
+2. Use isExtensionAvailable() for pre-check
+3. Amount parameter can be string or number
+4. Always handle four error types
+5. Call destroy() on component unmount
+6. Do not hardcode timeout in production environment
 ```
 
 ---
 
-## API 参考
+## API Reference
 
 ### CashtabConnect
 
@@ -196,41 +196,41 @@ cashtab.destroy();
 const cashtab = new CashtabConnect(options?: CashtabConnectOptions);
 ```
 
-**选项:**
+**Options:**
 
-| 选项 | 类型 | 默认值 | 描述 |
+| Option | Type | Default | Description |
 |------|------|--------|------|
-| `timeout` | number | 30000 | 请求超时（毫秒） |
-| `extensionNotAvailableMessage` | string | - | 扩展不可用时的错误消息 |
-| `addressDeniedMessage` | string | - | 地址请求被拒绝的消息 |
+| `timeout` | number | 30000 | Request timeout (milliseconds) |
+| `extensionNotAvailableMessage` | string | - | Error message when extension is unavailable |
+| `addressDeniedMessage` | string | - | Message when address request is denied |
 
-### 方法
+### Methods
 
-| 方法 | 返回值 | 描述 |
+| Method | Return Value | Description |
 |------|--------|------|
-| `waitForExtension(timeout?)` | Promise<void> | 等待扩展可用 |
-| `isExtensionAvailable()` | boolean | 检查扩展是否可用 |
-| `requestAddress()` | Promise<string> | 请求用户地址 |
-| `sendXec(address, amount)` | Promise<void> | 发送 XEC |
-| `sendToken(address, tokenId, quantity)` | Promise<void> | 发送 Token |
-| `sendBip21(bip21)` | Promise<void> | 使用 BIP21 URI 发送 |
-| `createTransactionFromBip21(bip21)` | object | 从 BIP21 创建交易 |
-| `destroy()` | void | 清理事件监听器 |
+| `waitForExtension(timeout?)` | Promise<void> | Wait for extension to be available |
+| `isExtensionAvailable()` | boolean | Check if extension is available |
+| `requestAddress()` | Promise<string> | Request user address |
+| `sendXec(address, amount)` | Promise<void> | Send XEC |
+| `sendToken(address, tokenId, quantity)` | Promise<void> | Send Token |
+| `sendBip21(bip21)` | Promise<void> | Send using BIP21 URI |
+| `createTransactionFromBip21(bip21)` | object | Create transaction from BIP21 |
+| `destroy()` | void | Cleanup event listeners |
 
-### 错误类型
+### Error Types
 
-| 错误类 | 描述 |
+| Error Class | Description |
 |--------|------|
-| `CashtabExtensionUnavailableError` | 扩展未安装 |
-| `CashtabAddressDeniedError` | 用户拒绝提供地址 |
-| `CashtabTransactionDeniedError` | 用户拒绝交易 |
-| `CashtabTimeoutError` | 请求超时 |
+| `CashtabExtensionUnavailableError` | Extension not installed |
+| `CashtabAddressDeniedError` | User denied providing address |
+| `CashtabTransactionDeniedError` | User denied transaction |
+| `CashtabTimeoutError` | Request timeout |
 
 ---
 
-## 代码示例
+## Code Examples
 
-### React 组件集成
+### React Component Integration
 
 ```tsx
 import React, { useEffect, useState } from 'react';
@@ -261,11 +261,11 @@ function WalletConnect() {
       setAddress(addr);
     } catch (err) {
       if (err instanceof CashtabExtensionUnavailableError) {
-        setError('请先安装 Cashtab 钱包扩展');
+        setError('Please install Cashtab wallet extension first');
       } else if (err instanceof CashtabAddressDeniedError) {
-        setError('您拒绝了地址请求');
+        setError('You denied the address request');
       } else {
-        setError('连接失败，请重试');
+        setError('Connection failed, please retry');
       }
     }
   };
@@ -274,22 +274,22 @@ function WalletConnect() {
     <div>
       {!isAvailable && (
         <button onClick={() => window.open('https://cashtab.com')}>
-          安装 Cashtab 钱包
+          Install Cashtab Wallet
         </button>
       )}
 
       {isAvailable && !address && (
-        <button onClick={handleConnect}>连接钱包</button>
+        <button onClick={handleConnect}>Connect Wallet</button>
       )}
 
-      {address && <p>已连接: {address}</p>}
+      {address && <p>Connected: {address}</p>}
       {error && <p style={{color: 'red'}}>{error}</p>}
     </div>
   );
 }
 ```
 
-### 支付组件
+### Payment Component
 
 ```tsx
 function PaymentButton({ toAddress, amount }: { toAddress: string; amount: string }) {
@@ -308,10 +308,10 @@ function PaymentButton({ toAddress, amount }: { toAddress: string; amount: strin
 
   return (
     <button onClick={handlePay} disabled={status === 'pending'}>
-      {status === 'idle' && `支付 ${amount} XEC`}
-      {status === 'pending' && '等待确认...'}
-      {status === 'success' && '支付成功'}
-      {status === 'error' && '支付失败'}
+      {status === 'idle' && `Pay ${amount} XEC`}
+      {status === 'pending' && 'Waiting for confirmation...'}
+      {status === 'success' && 'Payment successful'}
+      {status === 'error' && 'Payment failed'}
     </button>
   );
 }
@@ -319,27 +319,27 @@ function PaymentButton({ toAddress, amount }: { toAddress: string; amount: strin
 
 ---
 
-## 工作原理
+## How It Works
 
-### 扩展检测
+### Extension Detection
 
 ```typescript
-// Cashtab 扩展在 window 对象上注入标识
+// Cashtab extension injects identifier on window object
 window.bitcoinAbc === 'cashtab'
 ```
 
-### 消息协议
+### Message Protocol
 
 ```typescript
-// 发送到扩展的消息格式
+// Message format sent to extension
 {
   text: "Cashtab",
   type: "FROM_PAGE",
-  addressRequest: true,  // 或
+  addressRequest: true,  // or
   txInfo: { bip21: "ecash:...?amount=..." }
 }
 
-// 扩展返回的消息格式
+// Message format returned from extension
 {
   type: "FROM_CASHTAB",
   success: boolean,
@@ -354,39 +354,39 @@ window.bitcoinAbc === 'cashtab'
 
 ---
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Issues
 
-**Q: waitForExtension 总是失败**
-- 检查是否安装了 Cashtab 扩展
-- 检查浏览器兼容性
-- 尝试增加超时时间
+**Q: waitForExtension always fails**
+- Check if Cashtab extension is installed
+- Check browser compatibility
+- Try increasing timeout
 
-**Q: requestAddress 无响应**
-- 用户可能取消了弹窗
-- 扩展可能需要刷新页面
-- 检查控制台是否有错误
+**Q: requestAddress no response**
+- User may have cancelled the popup
+- Extension may need page refresh
+- Check console for errors
 
-**Q: sendXec 失败**
-- 确保用户有足够余额
-- 检查地址格式是否正确
-- 可能是用户拒绝了交易
+**Q: sendXec fails**
+- Ensure user has sufficient balance
+- Check if address format is correct
+- User may have denied the transaction
 
-**Q: 内存泄漏**
-- 确保组件卸载时调用 destroy()
-- 不要创建多个 CashtabConnect 实例
+**Q: Memory leak**
+- Ensure destroy() is called on component unmount
+- Don't create multiple CashtabConnect instances
 
-### 检测脚本
+### Detection Scripts
 
 ```typescript
-// 检查扩展是否安装
+// Check if extension is installed
 function isCashtabInstalled(): boolean {
   return typeof window !== 'undefined' &&
     (window as any).bitcoinAbc === 'cashtab';
 }
 
-// 检查扩展版本
+// Check extension version
 function getCashtabVersion(): string | null {
   return (window as any).cashtabVersion || null;
 }

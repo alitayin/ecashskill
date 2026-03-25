@@ -7,34 +7,34 @@ tags: [wallet, hd, bip44, tokens, utxo]
 
 # ecash-wallet
 
-eCash HD 钱包库，支持 XEC 转账、Token 操作、UTXO 管理和钱包同步。
+eCash HD wallet library with support for XEC transfers, Token operations, UTXO management, and wallet synchronization.
 
-## 概述
+## Overview
 
-ecash-wallet 提供：
-- HD 钱包支持（BIP44）
-- XEC 和 Token 转账
-- 钱包同步（Chronik）
-- 链上交易构建
-- Watch-Only 钱包
-- SLP/ALP Token 操作
+ecash-wallet provides:
+- HD wallet support (BIP44)
+- XEC and Token transfers
+- Wallet synchronization (Chronik)
+- On-chain transaction building
+- Watch-Only wallet
+- SLP/ALP Token operations
 
 **npm**: `ecash-wallet`
-**版本**: 5.1.0
-**官方仓库**: github.com/Bitcoin-ABC/bitcoin-abc (modules/ecash-wallet)
-**依赖**: chronik-client, ecash-lib
+**Version**: 5.1.0
+**Official Repository**: github.com/Bitcoin-ABC/bitcoin-abc (modules/ecash-wallet)
+**Dependencies**: chronik-client, ecash-lib
 
 ---
 
-## Claude Code 使用指南
+## Claude Code Usage Guide
 
-### 安装
+### Installation
 
 ```bash
 npm install ecash-wallet
 ```
 
-### 基础用法
+### Basic Usage
 
 ```typescript
 import { Wallet, WatchOnlyWallet } from 'ecash-wallet';
@@ -42,7 +42,7 @@ import { ChronikClient } from 'chronik-client';
 
 const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
 
-// 从助记词创建钱包
+// Create wallet from mnemonic
 const mnemonic = 'morning average minor stable parrot refuse credit exercise february mirror just begin';
 const wallet = Wallet.fromMnemonic(mnemonic, chronik);
 await wallet.sync();
@@ -51,21 +51,21 @@ console.log('Address:', wallet.address);
 console.log('Balance:', wallet.balanceSats, 'sats');
 ```
 
-### 发送 XEC
+### Sending XEC
 
 ```typescript
-// 发送 XEC
+// Send XEC
 const { hex } = await wallet.send(toAddress, sendSats);
 await wallet.broadcast(hex);
 
-// 或一步完成
+// Or one-step
 await wallet.send(toAddress, sendSats);
 ```
 
-### HD 钱包
+### HD Wallet
 
 ```typescript
-// 创建 HD 钱包
+// Create HD wallet
 const hdWallet = Wallet.fromMnemonic(mnemonic, chronik, {
   hd: true,
   accountNumber: 0,
@@ -74,27 +74,27 @@ const hdWallet = Wallet.fromMnemonic(mnemonic, chronik, {
 });
 await hdWallet.sync();
 
-// 获取下一个接收地址
+// Get next receive address
 const receiveAddr = hdWallet.getNextReceiveAddress();
 
-// 获取下一个找零地址
+// Get next change address
 const changeAddr = hdWallet.getNextChangeAddress();
 
-// 同步后重新获取
+// Re-fetch after sync
 hdWallet.incrementReceiveIndex();
 ```
 
-### Watch-Only 钱包
+### Watch-Only Wallet
 
 ```typescript
 import { WatchOnlyWallet } from 'ecash-wallet';
 
-// 单地址 watch-only
+// Single address watch-only
 const wow = WatchOnlyWallet.fromAddress(address, chronik);
 await wow.sync();
 console.log(wow.balanceSats);
 
-// HD watch-only (通过 xpub)
+// HD watch-only (via xpub)
 const hdWow = WatchOnlyWallet.fromXpub(xpub, chronik, {
   hd: true,
   accountNumber: 0,
@@ -102,12 +102,12 @@ const hdWow = WatchOnlyWallet.fromXpub(xpub, chronik, {
 await hdWow.sync();
 ```
 
-### Token 操作
+### Token Operations
 
 ```typescript
-// SLP/ALP Token 操作
+// SLP/ALP Token operations
 const action = wallet.action(
-  tokenType,    // 'SLP' 或 'ALP'
+  tokenType,    // 'SLP' or 'ALP'
   tokenId,
   quantity,
   outputs
@@ -118,32 +118,32 @@ await action.sign();
 await action.broadcast();
 ```
 
-### 提示词模板
+### Prompt Templates
 
 ```
-我需要创建一个 eCash 钱包
+I need to create an eCash wallet
 
-我需要发送 XEC 到指定地址
+I need to send XEC to a specified address
 
-我需要创建 HD 钱包并派生地址
+I need to create an HD wallet and derive addresses
 
-我需要创建 watch-only 钱包
+I need to create a watch-only wallet
 
-我需要查询钱包余额和 UTXO
+I need to query wallet balance and UTXOs
 
-我需要发送 SLP Token
+I need to send SLP Token
 ```
 
 ---
 
-## Cursor 规则配置
+## Cursor Rules Configuration
 
-### .cursorrules 片段
+### .cursorrules Snippet
 
 ```yaml
-# ecash-wallet 配置
+# ecash-wallet Configuration
 - name: "ecash-wallet"
-  description: "eCash HD 钱包库"
+  description: "eCash HD wallet library"
   files:
     - "**/*wallet*"
     - "**/*ecash*wallet*"
@@ -155,14 +155,14 @@ await action.broadcast();
 
     - type: "initialization"
       statement: |
-        // 初始化钱包流程
+        // Wallet initialization flow
         const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
         const wallet = Wallet.fromMnemonic(mnemonic, chronik);
-        await wallet.sync(); // 同步 UTXO 和余额
+        await wallet.sync(); // Sync UTXOs and balance
 
     - type: "hd-wallet"
       statement: |
-        // HD 钱包配置
+        // HD wallet configuration
         const hdWallet = Wallet.fromMnemonic(mnemonic, chronik, {
           hd: true,
           accountNumber: 0,
@@ -172,93 +172,93 @@ await action.broadcast();
 
     - type: "best-practice"
       statement: |
-        // 私钥永远不存储在前端
-        // 使用钱包签名而非直接操作私钥
-        // 每次发送后调用 wallet.sync() 更新 UTXO
+        // Never store private keys in frontend
+        // Use wallet signing instead of directly manipulating private keys
+        // Call wallet.sync() after each send to update UTXOs
 
     - type: "balance"
       statement: |
-        // 余额是 BigInt
+        // Balance is BigInt
         console.log(wallet.balanceSats); // 1000000n
 ```
 
-### AI 角色设定
+### AI Role Settings
 
 ```
-当你使用 ecash-wallet 时：
+When using ecash-wallet:
 
-1. 总是先 sync() 钱包再获取余额
-2. 金额使用 BigInt (n 后缀)
-3. 发送后需要重新 sync() 更新 UTXO
-4. WatchOnlyWallet 不能签名，只能查询
-5. HD 钱包使用 BIP44 派生路径
-6. 配合 chronik-client 使用
+1. Always sync() wallet first before getting balance
+2. Use BigInt for amounts (n suffix)
+3. Need to re-sync() after sending to update UTXOs
+4. WatchOnlyWallet cannot sign, only query
+5. HD wallet uses BIP44 derivation path
+6. Use with chronik-client
 ```
 
 ---
 
-## API 参考
+## API Reference
 
 ### Wallet
 
-**属性:**
+**Properties:**
 
-| 属性 | 类型 | 描述 |
+| Property | Type | Description |
 |------|------|------|
-| `address` | string | 当前地址 |
-| `balanceSats` | bigint | XEC 余额 (satoshis) |
-| `utxos` | WalletUtxo[] | UTXO 列表 |
-| `sk` | Uint8Array | 私钥 (如非 watch-only) |
-| `pk` | Uint8Array | 公钥 |
-| `pkh` | Uint8Array | 公钥哈希 |
-| `script` | Script | P2PKH 脚本 |
-| `isHD` | boolean | 是否为 HD 钱包 |
+| `address` | string | Current address |
+| `balanceSats` | bigint | XEC balance (satoshis) |
+| `utxos` | WalletUtxo[] | UTXO list |
+| `sk` | Uint8Array | Private key (if not watch-only) |
+| `pk` | Uint8Array | Public key |
+| `pkh` | Uint8Array | Public key hash |
+| `script` | Script | P2PKH script |
+| `isHD` | boolean | Whether HD wallet |
 
-**方法:**
+**Methods:**
 
-| 方法 | 返回值 | 描述 |
+| Method | Return Value | Description |
 |------|--------|------|
-| `sync()` | Promise<void> | 同步 UTXO 和余额 |
-| `send(address, sats)` | Promise<{ hex: string }> | 发送 XEC |
-| `broadcast(hex)` | Promise<string> | 广播交易 |
-| `getNextReceiveAddress()` | string | 获取下一个接收地址 |
-| `getNextChangeAddress()` | string | 获取下一个找零地址 |
-| `incrementReceiveIndex()` | void | 增加接收地址索引 |
-| `action(tokenType, tokenId, quantity, outputs)` | Action | 创建 Token 操作 |
+| `sync()` | Promise<void> | Sync UTXOs and balance |
+| `send(address, sats)` | Promise<{ hex: string }> | Send XEC |
+| `broadcast(hex)` | Promise<string> | Broadcast transaction |
+| `getNextReceiveAddress()` | string | Get next receive address |
+| `getNextChangeAddress()` | string | Get next change address |
+| `incrementReceiveIndex()` | void | Increment receive address index |
+| `action(tokenType, tokenId, quantity, outputs)` | Action | Create Token operation |
 
 ### WatchOnlyWallet
 
-**静态方法:**
+**Static Methods:**
 
-| 方法 | 返回值 | 描述 |
+| Method | Return Value | Description |
 |------|--------|------|
-| `fromAddress(address, chronik)` | WatchOnlyWallet | 从地址创建 |
-| `fromXpub(xpub, chronik, options?)` | WatchOnlyWallet | 从 xpub 创建 |
+| `fromAddress(address, chronik)` | WatchOnlyWallet | Create from address |
+| `fromXpub(xpub, chronik, options?)` | WatchOnlyWallet | Create from xpub |
 
-**属性:**
+**Properties:**
 
-| 属性 | 类型 | 描述 |
+| Property | Type | Description |
 |------|------|------|
-| `address` | string | 监视的地址 |
-| `balanceSats` | bigint | 余额 |
-| `utxos` | ScriptUtxo[] | UTXO 列表 |
+| `address` | string | Monitored address |
+| `balanceSats` | bigint | Balance |
+| `utxos` | ScriptUtxo[] | UTXO list |
 
-### BIP44 派生路径
+### BIP44 Derivation Path
 
 ```
-基础路径: m/44'/1899'/<accountNumber>'
+Base path: m/44'/1899'/<accountNumber>'
 
-接收地址: m/44'/1899'/<accountNumber>'/0/<index>
-找零地址: m/44'/1899'/<accountNumber>'/1/<index>
+Receive address: m/44'/1899'/<accountNumber>'/0/<index>
+Change address: m/44'/1899'/<accountNumber>'/1/<index>
 ```
 
-**1899** 是 eCash 专用的 BIP44 coin type。
+**1899** is the BIP44 coin type dedicated to eCash.
 
 ---
 
-## 代码示例
+## Code Examples
 
-### 完整的钱包应用
+### Complete Wallet Application
 
 ```typescript
 import { Wallet } from 'ecash-wallet';
@@ -275,9 +275,9 @@ class EcashWalletApp {
 
   async start() {
     await this.wallet.sync();
-    console.log(`钱包已就绪`);
-    console.log(`地址: ${this.wallet.address}`);
-    console.log(`余额: ${this.wallet.balanceSats} sats`);
+    console.log(`Wallet ready`);
+    console.log(`Address: ${this.wallet.address}`);
+    console.log(`Balance: ${this.wallet.balanceSats} sats`);
   }
 
   async getNewAddress(): Promise<string> {
@@ -288,13 +288,13 @@ class EcashWalletApp {
 
   async send(to: string, amount: bigint) {
     if (amount > this.wallet.balanceSats) {
-      throw new Error('余额不足');
+      throw new Error('Insufficient balance');
     }
 
     const { hex } = await this.wallet.send(to, amount);
     const txid = await this.wallet.broadcast(hex);
 
-    // 重新同步更新 UTXO
+    // Re-sync to update UTXOs
     await this.wallet.sync();
 
     return txid;
@@ -302,17 +302,17 @@ class EcashWalletApp {
 }
 ```
 
-### 处理多个 UTXO
+### Handling Multiple UTXOs
 
 ```typescript
-// 获取所有 UTXO
+// Get all UTXOs
 for (const utxo of wallet.utxos) {
   console.log(`TXID: ${utxo.txid}:${utxo.outIdx}`);
-  console.log(`金额: ${utxo.sats} sats`);
-  console.log(`脚本: ${utxo.script}`);
+  console.log(`Amount: ${utxo.sats} sats`);
+  console.log(`Script: ${utxo.script}`);
 }
 
-// 获取特定金额的 UTXO 组合
+// Get UTXO combination for specific amount
 function selectUtxos(utxos: WalletUtxo[], target: bigint): WalletUtxo[] {
   let total = 0n;
   const selected: WalletUtxo[] = [];
@@ -324,14 +324,14 @@ function selectUtxos(utxos: WalletUtxo[], target: bigint): WalletUtxo[] {
   }
 
   if (total < target) {
-    throw new Error('UTXO 不足');
+    throw new Error('Insufficient UTXO');
   }
 
   return selected;
 }
 ```
 
-### HD 钱包地址派生
+### HD Wallet Address Derivation
 
 ```typescript
 import { Wallet } from 'ecash-wallet';
@@ -339,7 +339,7 @@ import { ChronikClient } from 'chronik-client';
 
 const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
 
-// 创建 HD 钱包
+// Create HD wallet
 const hdWallet = Wallet.fromMnemonic(mnemonic, chronik, {
   hd: true,
   accountNumber: 0,
@@ -349,17 +349,17 @@ const hdWallet = Wallet.fromMnemonic(mnemonic, chronik, {
 
 await hdWallet.sync();
 
-// 生成一批接收地址
+// Generate batch of receive addresses
 const receiveAddresses: string[] = [];
 for (let i = 0; i < 5; i++) {
   receiveAddresses.push(hdWallet.address);
   hdWallet.incrementReceiveIndex();
 }
 
-console.log('接收地址:', receiveAddresses);
+console.log('Receive addresses:', receiveAddresses);
 ```
 
-### Watch-Only 监控
+### Watch-Only Monitoring
 
 ```typescript
 import { WatchOnlyWallet } from 'ecash-wallet';
@@ -369,12 +369,12 @@ async function monitorAddress(address: string) {
   const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
   const wow = WatchOnlyWallet.fromAddress(address, chronik);
 
-  // WebSocket 监听
+  // WebSocket monitoring
   const ws = chronik.ws({
     onMessage: async (msg) => {
       if (msg.type === 'TX_ADDED_TO_MEMPOOL' || msg.type === 'TX_CONFIRMED') {
-        await wow.sync(); // 更新余额
-        console.log(`新交易! 当前余额: ${wow.balanceSats} sats`);
+        await wow.sync(); // Update balance
+        console.log(`New transaction! Current balance: ${wow.balanceSats} sats`);
       }
     },
     autoReconnect: true,
@@ -389,16 +389,16 @@ async function monitorAddress(address: string) {
 
 ---
 
-## Token 操作
+## Token Operations
 
-### SLP Token 转账
+### SLP Token Transfer
 
 ```typescript
-// 发送 SLP Token
+// Send SLP Token
 const action = wallet.action(
   'SLP',
   tokenId,
-  1000n,  // token 数量
+  1000n,  // token quantity
   [
     { address: recipientAddress, amount: 1000n }
   ]
@@ -409,13 +409,13 @@ await action.sign();
 await action.broadcast();
 ```
 
-### ALP Token 操作
+### ALP Token Operations
 
 ```typescript
-// ALP Genesis (创建 Token)
+// ALP Genesis (Create Token)
 const action = wallet.action(
   'ALP',
-  'GENESIS',  // 新建 token 用 'GENESIS'
+  'GENESIS',  // Use 'GENESIS' for new token
   initialSupply,
   [{ address: wallet.address, amount: initialSupply }]
 );
@@ -431,52 +431,52 @@ const action = wallet.action(
 
 ---
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Issues
 
-**Q: sync() 后余额为 0**
-- 确认 Chronik 节点可连接
-- 检查地址是否正确
-- 确认链上已有转账
+**Q: Balance is 0 after sync()**
+- Confirm Chronik node is reachable
+- Check if address is correct
+- Confirm on-chain transfer has occurred
 
-**Q: send() 失败 "Insufficient funds"**
-- 余额不足（需要包含手续费）
-- UTXO 被占用
-- 需要先 sync() 更新 UTXO
+**Q: send() fails "Insufficient funds"**
+- Insufficient balance (need to include fee)
+- UTXO is locked
+- Need to sync() first to update UTXOs
 
-**Q: HD 钱包地址不匹配**
-- 检查派生路径是否正确
-- 确认 mnemonic 词序正确
-- 验证 accountNumber
+**Q: HD wallet address mismatch**
+- Check if derivation path is correct
+- Confirm mnemonic word order is correct
+- Verify accountNumber
 
-**Q: WatchOnlyWallet 不能签名**
-- 这是设计如此，WatchOnly 只读
-- 如需签名，使用 Wallet 类
+**Q: WatchOnlyWallet cannot sign**
+- This is by design, WatchOnly is read-only
+- Use Wallet class if signing is needed
 
-**Q: Token 操作失败**
-- 检查 tokenId 是否正确
-- 确认 Token 余额足够
-- 检查 tokenType ('SLP' 或 'ALP')
+**Q: Token operation fails**
+- Check if tokenId is correct
+- Confirm Token balance is sufficient
+- Check tokenType ('SLP' or 'ALP')
 
-### 调试技巧
+### Debugging Tips
 
 ```typescript
-// 启用详细日志
+// Enable verbose logs
 const wallet = Wallet.fromMnemonic(mnemonic, chronik, {
   hd: true,
-  verbose: true, // 如支持
+  verbose: true, // if supported
 });
 
-// 查看所有 UTXO
+// View all UTXOs
 console.log(JSON.stringify(wallet.utxos, null, 2));
 
-// 计算可用余额 (减去手续费)
-const feeEstimate = 1000n; // 约 1k sats
+// Calculate available balance (minus fee)
+const feeEstimate = 1000n; // ~1k sats
 const availableBalance = wallet.balanceSats - feeEstimate;
 ```
 
-### 依赖版本
+### Dependency Versions
 
 ```json
 {

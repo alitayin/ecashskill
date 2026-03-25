@@ -7,51 +7,51 @@ tags: [testing, mock, chronik, unit-test, websocket]
 
 # mock-chronik-client
 
-Chronik 客户端的测试模拟库，用于在单元测试中模拟区块链状态和 API 响应。
+Testing mock library for Chronik client, used to simulate blockchain state and API responses in unit tests.
 
-## 概述
+## Overview
 
-mock-chronik-client 提供：
-- 完整的 Chronik API 模拟
-- WebSocket 订阅模拟
-- 区块链状态模拟（区块、交易、UTXO）
-- 错误模拟（测试错误处理）
-- Agora 市场模拟
+mock-chronik-client provides:
+- Complete Chronik API mocking
+- WebSocket subscription mocking
+- Blockchain state mocking (blocks, transactions, UTXOs)
+- Error mocking (for testing error handling)
+- Agora market mocking
 
 **npm**: `mock-chronik-client`
-**版本**: 3.1.1
-**官方仓库**: github.com/Bitcoin-ABC/bitcoin-abc (modules/mock-chronik-client)
-**依赖**: chronik-client, ecashaddrjs, ws
+**Version**: 3.1.1
+**Official Repository**: github.com/Bitcoin-ABC/bitcoin-abc (modules/mock-chronik-client)
+**Dependencies**: chronik-client, ecashaddrjs, ws
 
 ---
 
-## Claude Code 使用指南
+## Claude Code Usage Guide
 
-### 安装
+### Installation
 
 ```bash
 npm install --save-dev mock-chronik-client
 ```
 
-### 基础用法
+### Basic Usage
 
 ```typescript
 import { MockChronikClient } from 'mock-chronik-client';
 
 const mockChronik = new MockChronikClient();
 
-// 设置模拟数据
+// Set mock data
 mockChronik.setChronikInfo({ version: '1.0.0' });
 mockChronik.setBlockchainInfo({ tipHeight: 800000 });
 ```
 
-### 模拟交易和 UTXO
+### Mock Transactions and UTXOs
 
 ```typescript
 const txid = '0f3c3908a2ddec8dea91d2fe1f77295bbbb158af869bff345d44ae800f0a5498';
 const address = 'ecash:qp2yfmz9zg0vy9hdn0uerxm6t9wfxty8jv4fyqmg8v';
 
-// 设置交易
+// Set transaction
 mockChronik.setTx(txid, {
   version: 2,
   inputs: [...],
@@ -59,7 +59,7 @@ mockChronik.setTx(txid, {
   lockTime: 0,
 });
 
-// 设置 UTXO
+// Set UTXO
 mockChronik.setUtxosByAddress(address, [
   {
     outpoint: { txid, outIdx: 0 },
@@ -69,11 +69,11 @@ mockChronik.setUtxosByAddress(address, [
   },
 ]);
 
-// 查询模拟数据
+// Query mock data
 const utxos = await mockChronik.address(address).utxos();
 ```
 
-### 模拟广播交易
+### Mock Broadcast Transaction
 
 ```typescript
 mockChronik.setBroadcastTx(rawTx, expectedTxid);
@@ -82,7 +82,7 @@ const { txid } = await mockChronik.broadcastTx(rawTx);
 console.log(txid === expectedTxid); // true
 ```
 
-### 模拟 WebSocket
+### Mock WebSocket
 
 ```typescript
 const ws = mockChronik.ws({
@@ -95,18 +95,18 @@ ws.subscribeToBlocks();
 ws.subscribeToAddress('ecash:qp2yfmz9zg0vy9hdn0uerxm6t9wfxty8jv4fyqmg8v');
 ws.subscribeToTokenId('token_id_here');
 
-// 取消订阅
+// Unsubscribe
 ws.unsubscribeFromBlocks();
 ```
 
-### 模拟错误
+### Mock Errors
 
 ```typescript
 const error = new Error('Transaction not found');
 
 mockChronik.setTx(txid, error);
 
-// 测试错误处理
+// Test error handling
 try {
   await mockChronik.tx(txid);
 } catch (e) {
@@ -114,43 +114,43 @@ try {
 }
 ```
 
-### 模拟 Agora
+### Mock Agora
 
 ```typescript
 import { MockAgora } from 'mock-chronik-client';
 
 const mockAgora = new MockAgora();
 
-// 设置模拟报价
+// Set mock offers
 mockAgora.setOfferedGroupTokenIds(['tokenId1', 'tokenId2']);
 mockAgora.setActiveOffersByPubKey(pubkeyHex, offers);
 mockAgora.setActiveOffersByTokenId(tokenId, offers);
 ```
 
-### 提示词模板
+### Prompt Templates
 
 ```
-我需要为 chronik-client 编写单元测试
+I need to write unit tests for chronik-client
 
-我需要模拟一个交易的返回结果
+I need to mock a transaction return result
 
-我需要测试 WebSocket 订阅功能
+I need to test WebSocket subscription functionality
 
-我需要模拟区块链错误场景
+I need to mock blockchain error scenarios
 
-我需要测试钱包余额查询
+I need to test wallet balance queries
 ```
 
 ---
 
-## Cursor 规则配置
+## Cursor Rules Configuration
 
-### .cursorrules 片段
+### .cursorrules Snippet
 
 ```yaml
-# mock-chronik-client 配置
+# mock-chronik-client Configuration
 - name: "mock-chronik-client"
-  description: "Chronik 测试模拟库"
+  description: "Chronik test mocking library"
   files:
     - "**/*.test.ts"
     - "**/*.spec.ts"
@@ -163,7 +163,7 @@ mockAgora.setActiveOffersByTokenId(tokenId, offers);
 
     - type: "setup"
       statement: |
-        // 测试前设置模拟
+        // Setup mock before test
         beforeEach(() => {
           mockChronik = new MockChronikClient();
           mockChronik.setChronikInfo({ version: '1.0.0' });
@@ -172,92 +172,92 @@ mockAgora.setActiveOffersByTokenId(tokenId, offers);
 
     - type: "mock-data"
       statement: |
-        // 模拟常用数据
+        // Mock common data
         mockChronik.setTx(txid, mockTransaction);
         mockChronik.setUtxosByAddress(address, [mockUtxo]);
         mockChronik.setToken(tokenId, mockTokenInfo);
 
     - type: "error-mock"
       statement: |
-        // 模拟错误
+        // Mock errors
         mockChronik.setTx(txid, new Error('Not found'));
         await expect(chronik.tx(txid)).rejects.toThrow('Not found');
 
     - type: "teardown"
       statement: |
-        // 测试后清理
+        // Cleanup after test
         afterEach(() => {
           mockChronik = null;
         });
 ```
 
-### AI 角色设定
+### AI Role Settings
 
 ```
-当你使用 mock-chronik-client 编写测试时：
+When using mock-chronik-client to write tests:
 
-1. 在 beforeEach 中创建新的 MockChronikClient 实例
-2. 使用 setTx, setUtxosByAddress 等方法设置模拟数据
-3. 可以模拟任何错误场景
-4. WebSocket 方法与真实 chronik-client 相同
-5. 包含 MockAgora 用于测试 Agora 报价
+1. Create new MockChronikClient instance in beforeEach
+2. Use setTx, setUtxosByAddress etc. to set mock data
+3. Can mock any error scenario
+4. WebSocket methods are the same as real chronik-client
+5. Includes MockAgora for testing Agora offers
 ```
 
 ---
 
-## API 参考
+## API Reference
 
 ### MockChronikClient
 
-#### 初始化
+#### Initialization
 
 ```typescript
 const mockChronik = new MockChronikClient();
 ```
 
-#### 区块链信息
+#### Blockchain Info
 
-| 方法 | 描述 |
+| Method | Description |
 |------|------|
-| `setChronikInfo(info)` | 设置 Chronik 版本信息 |
-| `setBlockchainInfo(info)` | 设置区块链状态 |
+| `setChronikInfo(info)` | Set Chronik version info |
+| `setBlockchainInfo(info)` | Set blockchain state |
 
-#### 交易
+#### Transactions
 
-| 方法 | 描述 |
+| Method | Description |
 |------|------|
-| `setTx(txid, tx)` | 设置交易数据或错误 |
-| `setBroadcastTx(rawTx, txid)` | 设置广播结果 |
-| `setRawTx(txid, rawHex)` | 设置原始交易 |
-| `setToken(tokenId, token)` | 设置 Token 信息 |
+| `setTx(txid, tx)` | Set transaction data or error |
+| `setBroadcastTx(rawTx, txid)` | Set broadcast result |
+| `setRawTx(txid, rawHex)` | Set raw transaction |
+| `setToken(tokenId, token)` | Set Token info |
 
-#### 地址/脚本
+#### Address/Script
 
-| 方法 | 描述 |
+| Method | Description |
 |------|------|
-| `setUtxosByAddress(addr, utxos)` | 设置地址 UTXO |
-| `setTxHistoryByAddress(addr, txs)` | 设置地址交易历史 |
-| `setUtxosByScript(type, hash, utxos)` | 设置脚本 UTXO |
-| `setTxHistoryByScript(type, hash, txs)` | 设置脚本交易历史 |
+| `setUtxosByAddress(addr, utxos)` | Set address UTXOs |
+| `setTxHistoryByAddress(addr, txs)` | Set address transaction history |
+| `setUtxosByScript(type, hash, utxos)` | Set script UTXOs |
+| `setTxHistoryByScript(type, hash, txs)` | Set script transaction history |
 
 #### Token
 
-| 方法 | 描述 |
+| Method | Description |
 |------|------|
-| `setUtxosByTokenId(tokenId, utxos)` | 设置 Token UTXO |
-| `setTxHistoryByTokenId(tokenId, txs)` | 设置 Token 交易历史 |
+| `setUtxosByTokenId(tokenId, utxos)` | Set Token UTXOs |
+| `setTxHistoryByTokenId(tokenId, txs)` | Set Token transaction history |
 
 #### LokadId
 
-| 方法 | 描述 |
+| Method | Description |
 |------|------|
-| `setTxHistoryByLokadId(lokadId, txs)` | 设置 LokadId 交易历史 |
+| `setTxHistoryByLokadId(lokadId, txs)` | Set LokadId transaction history |
 
-#### 区块
+#### Blocks
 
-| 方法 | 描述 |
+| Method | Description |
 |------|------|
-| `setBlock(hashOrHeight, block)` | 设置区块数据 |
+| `setBlock(hashOrHeight, block)` | Set block data |
 
 #### WebSocket
 
@@ -289,9 +289,9 @@ mockAgora.setHistoricOffers(params, result);
 
 ---
 
-## 代码示例
+## Code Examples
 
-### 完整测试示例
+### Complete Test Example
 
 ```typescript
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -307,11 +307,11 @@ describe('Wallet Balance Tests', () => {
   beforeEach(() => {
     mockChronik = new MockChronikClient();
 
-    // 设置区块链状态
+    // Set blockchain state
     mockChronik.setChronikInfo({ version: '1.0.0' });
     mockChronik.setBlockchainInfo({ tipHeight: 800000 });
 
-    // 设置 UTXO
+    // Set UTXO
     mockChronik.setUtxosByAddress(testAddress, [
       {
         outpoint: {
@@ -346,7 +346,7 @@ describe('Wallet Balance Tests', () => {
 });
 ```
 
-### WebSocket 测试
+### WebSocket Test
 
 ```typescript
 describe('WebSocket Subscriptions', () => {
@@ -366,7 +366,7 @@ describe('WebSocket Subscriptions', () => {
     await ws.waitForOpen();
     ws.subscribeToBlocks();
 
-    // 模拟新区块
+    // Simulate new block
     ws.simulateBlockConnected({
       hash: '00'.repeat(32),
       height: 800001,
@@ -389,7 +389,7 @@ describe('WebSocket Subscriptions', () => {
     await ws.waitForOpen();
     ws.subscribeToAddress(testAddress);
 
-    // 模拟交易
+    // Simulate transaction
     ws.simulateTxAddedToMempool({
       txid: '11'.repeat(32),
       outputs: [{ address: testAddress, sats: 50000 }],
@@ -404,7 +404,7 @@ describe('WebSocket Subscriptions', () => {
 });
 ```
 
-### 错误处理测试
+### Error Handling Test
 
 ```typescript
 describe('Error Handling', () => {
@@ -431,11 +431,11 @@ describe('Error Handling', () => {
   });
 
   it('should simulate insufficient funds', async () => {
-    // 在实际测试中验证钱包逻辑
+    // Verify wallet logic in actual test
     const wallet = Wallet.fromMnemonic(mnemonic, mockChronik);
     await wallet.sync();
 
-    // 模拟余额为 0
+    // Simulate balance as 0
     mockChronik.setUtxosByAddress(wallet.address, []);
 
     await expect(wallet.send(recipient, 1000n)).rejects.toThrow(
@@ -445,7 +445,7 @@ describe('Error Handling', () => {
 });
 ```
 
-### 集成测试示例
+### Integration Test Example
 
 ```typescript
 describe('Send Transaction Integration', () => {
@@ -458,7 +458,7 @@ describe('Send Transaction Integration', () => {
     mockChronik.setChronikInfo({ version: '1.0.0' });
     mockChronik.setBlockchainInfo({ tipHeight: 800000 });
 
-    // 设置有余额的 UTXO
+    // Set UTXO with balance
     const { utxo, txid } = await createMockUtxo(mockChronik, {
       sats: 1000000n,
     });
@@ -473,11 +473,11 @@ describe('Send Transaction Integration', () => {
 
     const { hex } = await wallet.send(recipient, sendAmount);
 
-    // 验证广播被调用
+    // Verify broadcast was called
     mockChronik.setBroadcastTx(hex, 'mock_txid');
     const result = await wallet.broadcast(hex);
 
-    // 重新同步后余额应该减少
+    // Balance should decrease after re-sync
     await wallet.sync();
     expect(wallet.balanceSats).toBeLessThan(originalBalance);
   });
@@ -486,41 +486,41 @@ describe('Send Transaction Integration', () => {
 
 ---
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Issues
 
-**Q: 模拟数据不生效**
-- 确认在查询前调用了 set* 方法
-- 检查地址格式是否正确
-- 确认使用了正确的 set 方法（byAddress vs byScript）
+**Q: Mock data not taking effect**
+- Confirm set* method was called before query
+- Check if address format is correct
+- Confirm correct set method was used (byAddress vs byScript)
 
-**Q: WebSocket 消息不触发**
-- 确保调用了 waitForOpen()
-- 检查是否正确订阅（subscribeTo*）
-- 确认 onMessage 回调正确设置
+**Q: WebSocket message not triggering**
+- Ensure waitForOpen() was called
+- Check if subscription was correct (subscribeTo*)
+- Confirm onMessage callback is correctly set
 
-**Q: 错误模拟不工作**
-- 确保错误是 Error 实例
-- 检查错误设置在正确的 txid 上
+**Q: Error mock not working**
+- Ensure error is an Error instance
+- Check error is set on correct txid
 
-**Q: 多个测试间数据污染**
-- 在 beforeEach 中创建新实例
-- 在 afterEach 中清理
+**Q: Data pollution between tests**
+- Create new instance in beforeEach
+- Cleanup in afterEach
 
-### 最佳实践
+### Best Practices
 
 ```typescript
-// 1. 每个测试创建新实例
+// 1. Create new instance for each test
 beforeEach(() => {
   mockChronik = new MockChronikClient();
 });
 
-// 2. 设置基础状态
+// 2. Set base state
 mockChronik.setChronikInfo({ version: '1.0.0' });
 mockChronik.setBlockchainInfo({ tipHeight: 800000 });
 
-// 3. 使用工厂函数创建复杂模拟数据
+// 3. Use factory functions for complex mock data
 function createMockTx(overrides = {}) {
   return {
     version: 2,
@@ -531,25 +531,25 @@ function createMockTx(overrides = {}) {
   };
 }
 
-// 4. 清理
+// 4. Cleanup
 afterEach(() => {
   mockChronik = null;
 });
 ```
 
-### 调试技巧
+### Debugging Tips
 
 ```typescript
-// 开启调试日志
+// Enable debug logs
 const mockChronik = new MockChronikClient({
   debug: true,
 });
 
-// 查看所有调用的方法
+// View all called methods
 mockChronik.onCall((method, args) => {
   console.log(method, args);
 });
 
-// 验证方法调用
+// Verify method calls
 expect(mockChronik.tx).toHaveBeenCalledWith(txid);
 ```
