@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { BookOpen, Code, FileText } from "lucide-react"
+import { BookOpen, Code } from "lucide-react"
 
 export function Header() {
   return (
@@ -16,20 +16,6 @@ export function Header() {
           >
             <Code className="w-4 h-4" />
             Skills
-          </Link>
-          <Link
-            href="/guides"
-            className="flex items-center gap-2 text-sm hover:text-primary"
-          >
-            <FileText className="w-4 h-4" />
-            Guides
-          </Link>
-          <Link
-            href="/reference"
-            className="flex items-center gap-2 text-sm hover:text-primary"
-          >
-            <BookOpen className="w-4 h-4" />
-            Reference
           </Link>
         </nav>
       </div>

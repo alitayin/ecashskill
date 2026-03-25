@@ -2,77 +2,74 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 
-const skillsDirectory = path.join(process.cwd(), "public/skills/ecash")
+const skillsRoot = path.join(process.cwd(), "plugins/ecash/skills/ecash")
 
-export interface SkillMeta {
+export interface FileItem {
   name: string
-  description: string
-  version: string
-  tags: string[]
-  slug: string
+  type: "file" | "directory"
+  path: string
 }
 
-export interface Reference {
-  slug: string
-  name: string
-  description: string
-}
-
-export function getAllSkills(): SkillMeta[] {
-  const skillPath = path.join(skillsDirectory, "SKILL.md")
-  if (!fs.existsSync(skillPath)) {
+export function getDirectoryContents(relativePath: string = ""): FileItem[] {
+  const fullPath = path.join(skillsRoot, relativePath)
+  if (!fs.existsSync(fullPath)) {
     return []
   }
-  const fileContents = fs.readFileSync(skillPath, "utf8")
-  const { data } = matter(fileContents)
-  return [{
-    slug: "ecash",
-    ...(data as Omit<SkillMeta, "slug">),
-  }]
+
+  const items = fs.readdirSync(fullPath)
+  return items
+    .filter(name => !name.startsWith("."))
+    .map(name => {
+      const itemPath = path.join(fullPath, name)
+      const stat = fs.statSync(itemPath)
+      return {
+        name,
+        type: (stat.isDirectory() ? "directory" : "file") as "file" | "directory",
+        path: relativePath ? `${relativePath}/${name}` : name,
+      }
+    })
+    .sort((a, b) => {
+      // Directories first, then files
+      if (a.type !== b.type) return a.type === "directory" ? -1 : 1
+      return a.name.localeCompare(b.name)
+    })
 }
 
-export function getReferences(): Reference[] {
-  const refsDir = path.join(skillsDirectory, "references")
-  if (!fs.existsSync(refsDir)) {
-    return []
+export function getFileContent(relativePath: string): { content: string; data: any } | null {
+  // Handle both /skills/ecash/SKILL.md and SKILL.md paths
+  let fullPath = relativePath
+
+  // If path doesn't start with ecash/, try adding it
+  if (!fullPath.startsWith("ecash")) {
+    fullPath = path.join(skillsRoot, relativePath)
+  } else {
+    fullPath = path.join(skillsRoot, relativePath.replace("skills/ecash/", ""))
   }
-  const files = fs.readdirSync(refsDir).filter(f => f.endsWith(".md"))
-  return files.map(file => {
-    const slug = file.replace(".md", "")
-    const fullPath = path.join(refsDir, file)
-    const fileContents = fs.readFileSync(fullPath, "utf8")
-    const { data } = matter(fileContents)
-    return {
-      slug,
-      name: (data as any).name || slug,
-      description: (data as any).description || "",
+
+  // Also try the direct path
+  const directPath = path.join(skillsRoot, relativePath)
+  const tryPaths = [fullPath, directPath, path.join(skillsRoot, "ecash", relativePath)]
+
+  for (const tryPath of tryPaths) {
+    if (fs.existsSync(tryPath) && fs.statSync(tryPath).isFile()) {
+      const fileContents = fs.readFileSync(tryPath, "utf8")
+      const { data, content } = matter(fileContents)
+      return { content, data }
     }
-  }).sort((a, b) => a.name.localeCompare(b.name))
+  }
+
+  return null
 }
 
-export function getSkill(slug: string): (SkillMeta & { content: string }) | null {
-  const skillPath = path.join(skillsDirectory, "SKILL.md")
-  if (!fs.existsSync(skillPath)) {
-    return null
-  }
-  const fileContents = fs.readFileSync(skillPath, "utf8")
-  const { data, content } = matter(fileContents)
-  return {
-    slug: "ecash",
-    content,
-    ...(data as Omit<SkillMeta, "slug">),
-  }
-}
+export function getBreadcrumbs(relativePath: string) {
+  const parts = relativePath.split("/").filter(Boolean)
+  const breadcrumbs = [{ name: "ecash", path: "" }]
 
-export function getReference(slug: string): { name: string, content: string } | null {
-  const refPath = path.join(skillsDirectory, "references", `${slug}.md`)
-  if (!fs.existsSync(refPath)) {
-    return null
+  let currentPath = ""
+  for (const part of parts) {
+    currentPath = currentPath ? `${currentPath}/${part}` : part
+    breadcrumbs.push({ name: part, path: currentPath })
   }
-  const fileContents = fs.readFileSync(refPath, "utf8")
-  const { data, content } = matter(fileContents)
-  return {
-    name: (data as any).name || slug,
-    content,
-  }
+
+  return breadcrumbs
 }
