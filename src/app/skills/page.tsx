@@ -1,60 +1,46 @@
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { ArrowRight } from "lucide-react"
-
-const skills = [
-  {
-    slug: "wallet-connect",
-    title: "eCash 钱包连接",
-    description: "学习如何将 eCash 钱包连接到你的 AI Agent",
-    category: "wallet",
-  },
-  {
-    slug: "token-transfer",
-    title: "Token 转账",
-    description: "实现 eCash Token 的发送和接收功能",
-    category: "defi",
-  },
-  {
-    slug: "agent-template",
-    title: "AI Agent 模板",
-    description: "快速创建 eCash 交互的 AI Agent",
-    category: "agent",
-  },
-]
+import { DocsLayout } from "@/components/layout/DocsLayout"
+import { getAllSkills } from "@/lib/navigation"
 
 export default function SkillsPage() {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Skills</h1>
-        <p className="text-muted-foreground">
-          eCash 相关的 AI Agent Skill 开发指南
-        </p>
-      </div>
+  const skills = getAllSkills()
+  const firstSkill = skills[0]
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {skills.map((skill) => (
-          <Card key={skill.slug} className="hover:border-primary transition-colors">
-            <CardHeader>
-              <div className="flex items-center justify-between mb-2">
-                <Badge variant="secondary">{skill.category}</Badge>
-              </div>
-              <CardTitle>{skill.title}</CardTitle>
-              <CardDescription>{skill.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
+  return (
+    <DocsLayout>
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="text-center py-16">
+          <h1 className="text-4xl font-bold mb-4">eCash Skills</h1>
+          <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
+            为 AI 编码工具 (Claude Code, Cursor) 提供的 eCash 开发指南和规则配置
+          </p>
+          {firstSkill && (
+            <Link
+              href={`/skills/${firstSkill.slug}`}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90"
+            >
+              开始学习 <ArrowRight className="w-4 h-4" />
+            </Link>
+          )}
+        </div>
+
+        <div className="mt-12">
+          <h2 className="text-2xl font-semibold mb-4">所有 Skills</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {skills.map((skill) => (
               <Link
+                key={skill.slug}
                 href={`/skills/${skill.slug}`}
-                className="inline-flex items-center text-sm text-primary hover:underline"
+                className="p-4 rounded-lg border hover:border-primary transition-colors"
               >
-                查看详情 <ArrowRight className="w-4 h-4 ml-1" />
+                <h3 className="font-medium mb-1">{skill.name}</h3>
+                <p className="text-sm text-muted-foreground">{skill.description}</p>
               </Link>
-            </CardContent>
-          </Card>
-        ))}
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </DocsLayout>
   )
 }
