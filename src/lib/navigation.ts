@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 
-const skillsDirectory = path.join(process.cwd(), "src/skills/ecash")
+const skillsDirectory = path.join(process.cwd(), "skills")
 
 export interface SkillMeta {
   name: string
@@ -18,16 +18,18 @@ export interface SkillCategory {
 }
 
 export function getAllSkills(): SkillMeta[] {
-  const files = fs.readdirSync(skillsDirectory)
-  const skills = files
-    .filter((file) => file.endsWith(".md"))
-    .map((file) => {
-      const slug = file.replace(".md", "")
-      const fullPath = path.join(skillsDirectory, file)
+  const dirs = fs.readdirSync(skillsDirectory).filter((d) => {
+    const stat = fs.statSync(path.join(skillsDirectory, d))
+    return stat.isDirectory() && d !== 'references'
+  })
+  const skills = dirs
+    .filter((dir) => fs.existsSync(path.join(skillsDirectory, dir, "SKILL.md")))
+    .map((dir) => {
+      const fullPath = path.join(skillsDirectory, dir, "SKILL.md")
       const fileContents = fs.readFileSync(fullPath, "utf8")
       const { data } = matter(fileContents)
       return {
-        slug,
+        slug: dir,
         ...(data as Omit<SkillMeta, "slug">),
       }
     })
@@ -70,7 +72,7 @@ export function getSkillsByCategory(): SkillCategory[] {
 }
 
 export function getSkill(slug: string): (SkillMeta & { content: string }) | null {
-  const fullPath = path.join(skillsDirectory, `${slug}.md`)
+  const fullPath = path.join(skillsDirectory, slug, "SKILL.md")
   if (!fs.existsSync(fullPath)) {
     return null
   }

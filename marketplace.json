@@ -1,0 +1,59 @@
+{
+  "$schema": "https://claude.com/schemas/marketplace.schema.json",
+  "name": "ecash-skills",
+  "displayName": "eCash Development Skills",
+  "description": "Claude Code skills for eCash blockchain development",
+  "version": "1.0.0",
+  "skills": [
+    {
+      "name": "chronik",
+      "description": "High-performance blockchain indexer built into Bitcoin ABC node",
+      "category": "infrastructure"
+    },
+    {
+      "name": "chronik-client",
+      "description": "Client library for Chronik indexer",
+      "category": "infrastructure"
+    },
+    {
+      "name": "ecash-lib",
+      "description": "Transaction building and signing library for eCash",
+      "category": "transaction"
+    },
+    {
+      "name": "ecash-wallet",
+      "description": "HD wallet library for eCash with XEC and token support",
+      "category": "wallet"
+    },
+    {
+      "name": "ecashaddrjs",
+      "description": "eCash address encoding/decoding utilities",
+      "category": "utilities"
+    },
+    {
+      "name": "bitcoin-abc",
+      "description": "Bitcoin ABC eCash node implementation and contribution guidelines",
+      "category": "infrastructure"
+    },
+    {
+      "name": "cashtab",
+      "description": "Web wallet reference implementation for eCash",
+      "category": "applications"
+    },
+    {
+      "name": "cashtab-connect",
+      "description": "Browser extension integration for Cashtab",
+      "category": "applications"
+    },
+    {
+      "name": "ecash-agora",
+      "description": "eCash marketplace application",
+      "category": "applications"
+    },
+    {
+      "name": "mock-chronik-client",
+      "description": "Mock client for testing Chronik interactions",
+      "category": "testing"
+    }
+  ]
+}
