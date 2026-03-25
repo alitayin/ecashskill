@@ -39,7 +39,7 @@ export default async function SkillsPage({ params }: PageProps) {
             <a href={`/skills/ecash/${relativePath}`} download={filename}>
               <Button size="sm">
                 <Download className="w-4 h-4 mr-2" />
-                下载
+                Download
               </Button>
             </a>
           </div>
@@ -93,7 +93,7 @@ export default async function SkillsPage({ params }: PageProps) {
 
         <div className="bg-muted/50 rounded-lg border">
           {items.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground">空目录</div>
+            <div className="p-8 text-center text-muted-foreground">Empty directory</div>
           ) : (
             <ul className="divide-y">
               {items.map((item) => (
