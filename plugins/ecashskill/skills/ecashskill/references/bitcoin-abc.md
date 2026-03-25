@@ -259,7 +259,7 @@ import {
 
 ```typescript
 import { ChronikClient } from 'chronik-client';
-const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
 ```
 
 ### ecashaddrjs

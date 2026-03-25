@@ -131,7 +131,7 @@ enum TokenTxType {
 
 ## Recommended Nodes
 
-- `https://chronik.be.cash/xec` - Bitcoin.com maintained
+- `https://chronik.e.cash/xec` - Bitcoin.com maintained
 - `http://localhost:8331` - Local Bitcoin ABC node
 
 ## Performance Tips

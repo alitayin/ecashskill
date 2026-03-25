@@ -40,7 +40,7 @@ npm install chronik-client
 import { ChronikClient, ConnectionStrategy } from 'chronik-client';
 
 // Method 1: Direct connection
-const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
 
 // Method 2: Auto-select node with lowest latency
 const chronik = await ChronikClient.useStrategy(
@@ -146,7 +146,7 @@ I need to broadcast a signed transaction
         // Recommended to use ConnectionStrategy.ClosestFirst for auto-selecting optimal node
         const chronik = await ChronikClient.useStrategy(
           ConnectionStrategy.ClosestFirst,
-          ['https://chronik.be.cash/xec']
+          ['https://chronik.e.cash/xec']
         );
 
     - type: "error-handling"
@@ -348,14 +348,14 @@ const ws = chronik.ws({
 
 ### Recommended Chronik Nodes
 
-- `https://chronik.be.cash/xec`
+- `https://chronik.e.cash/xec`
 - `https://chronik.e.cash` (official)
 
 ### Debugging Tips
 
 ```typescript
 // Enable detailed logs
-const chronik = new ChronikClient(['https://chronik.be.cash/xec'], {
+const chronik = new ChronikClient(['https://chronik.e.cash/xec'], {
   timeout: 30000,
   debug: true,
 });

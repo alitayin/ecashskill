@@ -57,7 +57,7 @@ class TransactionMonitor {
 }
 
 // Usage
-const monitor = new TransactionMonitor(['https://chronik.be.cash/xec']);
+const monitor = new TransactionMonitor(['https://chronik.e.cash/xec']);
 await monitor.start();
 monitor.subscribeToAddress('ecash:qzahkehkauy0vy4jr4pmrhhttz5hqxxxxx', (tx) => {
   console.log('New transaction:', tx.txid);

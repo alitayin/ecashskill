@@ -40,7 +40,7 @@ npm install ecash-wallet
 import { Wallet, WatchOnlyWallet } from 'ecash-wallet';
 import { ChronikClient } from 'chronik-client';
 
-const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
 
 // Create wallet from mnemonic
 const mnemonic = 'morning average minor stable parrot refuse credit exercise february mirror just begin';
@@ -156,7 +156,7 @@ I need to send SLP Token
     - type: "initialization"
       statement: |
         // Wallet initialization flow
-        const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+        const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
         const wallet = Wallet.fromMnemonic(mnemonic, chronik);
         await wallet.sync(); // Sync UTXOs and balance
 
@@ -269,7 +269,7 @@ class EcashWalletApp {
   private chronik: ChronikClient;
 
   constructor(mnemonic: string) {
-    this.chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+    this.chronik = new ChronikClient(['https://chronik.e.cash/xec']);
     this.wallet = Wallet.fromMnemonic(mnemonic, this.chronik, { hd: true });
   }
 
@@ -337,7 +337,7 @@ function selectUtxos(utxos: WalletUtxo[], target: bigint): WalletUtxo[] {
 import { Wallet } from 'ecash-wallet';
 import { ChronikClient } from 'chronik-client';
 
-const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
 
 // Create HD wallet
 const hdWallet = Wallet.fromMnemonic(mnemonic, chronik, {
@@ -366,7 +366,7 @@ import { WatchOnlyWallet } from 'ecash-wallet';
 import { ChronikClient } from 'chronik-client';
 
 async function monitorAddress(address: string) {
-  const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+  const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
   const wow = WatchOnlyWallet.fromAddress(address, chronik);
 
   // WebSocket monitoring

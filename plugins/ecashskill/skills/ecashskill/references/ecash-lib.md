@@ -147,7 +147,7 @@ const pkh = shaRmd160(pubkey);
 const p2pkhScript = Script.p2pkh(pkh);
 
 // Connect to Chronik
-const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
 
 // Subscribe to address
 const ws = chronik.ws({

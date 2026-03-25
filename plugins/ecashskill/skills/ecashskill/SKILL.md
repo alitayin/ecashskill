@@ -51,8 +51,10 @@ Use this skill when:
 
 ```typescript
 import { ChronikClient } from 'chronik-client';
-const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
 ```
+
+For more available Chronik nodes, see [https://chronik.cash](https://chronik.cash).
 
 ## Prompt Templates
 

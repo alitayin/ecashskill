@@ -23,7 +23,7 @@ Chronik is a high-performance blockchain indexer built into Bitcoin ABC node tha
 import { ChronikClient } from 'chronik-client';
 
 // Connect to remote node
-const chronik = new ChronikClient(['https://chronik.be.cash/xec']);
+const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
 
 // Or local node
 const chronik = new ChronikClient(['http://localhost:8331']);
