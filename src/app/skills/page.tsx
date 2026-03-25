@@ -1,46 +1,55 @@
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-import { DocsLayout } from "@/components/layout/DocsLayout"
+import { ArrowLeft } from "lucide-react"
 import { getAllSkills } from "@/lib/navigation"
+import { Badge } from "@/components/ui/badge"
 
 export default function SkillsPage() {
   const skills = getAllSkills()
-  const firstSkill = skills[0]
 
   return (
-    <DocsLayout>
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="text-center py-16">
-          <h1 className="text-4xl font-bold mb-4">eCash Skills</h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            为 AI 编码工具 (Claude Code, Cursor) 提供的 eCash 开发指南和规则配置
-          </p>
-          {firstSkill && (
-            <Link
-              href={`/skills/${firstSkill.slug}`}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90"
-            >
-              开始学习 <ArrowRight className="w-4 h-4" />
-            </Link>
-          )}
+    <div className="min-h-screen">
+      <header className="border-b bg-white sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="w-4 h-4" /> 返回首页
+          </Link>
         </div>
+      </header>
 
-        <div className="mt-12">
-          <h2 className="text-2xl font-semibold mb-4">所有 Skills</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {skills.map((skill) => (
-              <Link
-                key={skill.slug}
-                href={`/skills/${skill.slug}`}
-                className="p-4 rounded-lg border hover:border-primary transition-colors"
-              >
-                <h3 className="font-medium mb-1">{skill.name}</h3>
-                <p className="text-sm text-muted-foreground">{skill.description}</p>
-              </Link>
-            ))}
-          </div>
+      <main className="container mx-auto px-4 py-8 max-w-3xl">
+        <h1 className="text-3xl font-bold mb-2">eCash Skills</h1>
+        <p className="text-muted-foreground mb-8">
+          选择一个 Skill 查看 Claude Code 提示词和 Cursor 配置
+        </p>
+
+        <div className="space-y-3">
+          {skills.map((skill) => (
+            <Link
+              key={skill.slug}
+              href={`/skills/${skill.slug}`}
+              className="block p-4 rounded-lg border hover:border-primary hover:bg-muted/50 transition-colors"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="font-medium">{skill.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{skill.description}</p>
+                </div>
+                <Badge variant="secondary" className="shrink-0">{skill.version}</Badge>
+              </div>
+              <div className="flex flex-wrap gap-1 mt-3">
+                {skill.tags?.slice(0, 5).map((tag) => (
+                  <span key={tag} className="text-xs bg-muted px-2 py-0.5 rounded">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </Link>
+          ))}
         </div>
-      </div>
-    </DocsLayout>
+      </main>
+    </div>
   )
 }
