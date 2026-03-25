@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         <section className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">eCash AI 开发 Skills</h2>

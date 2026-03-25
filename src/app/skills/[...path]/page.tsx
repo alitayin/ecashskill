@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, File, Folder, Download, ChevronRight } from "lucide-react"
+import { File, Folder, Download, ChevronRight } from "lucide-react"
 import { getDirectoryContents, getFileContent, getBreadcrumbs } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
 import { marked } from "marked"
@@ -22,16 +22,10 @@ export default async function SkillsPage({ params }: PageProps) {
     const breadcrumbs = getBreadcrumbs(relativePath.slice(0, relativePath.lastIndexOf("/")))
 
     return (
-      <div className="min-h-screen">
-        <header className="border-b bg-white sticky top-0 z-10">
-          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="min-h-screen bg-white">
+        <div className="border-b">
+          <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/skills">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  返回
-                </Button>
-              </Link>
               <nav className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Link href="/skills" className="hover:text-foreground">ecash</Link>
                 {breadcrumbs.slice(1).map((crumb) => (
@@ -49,7 +43,7 @@ export default async function SkillsPage({ params }: PageProps) {
               </Button>
             </a>
           </div>
-        </header>
+        </div>
 
         <main className="container mx-auto px-4 py-8 max-w-4xl">
           <h1 className="text-3xl font-bold mb-6">{filename}</h1>
@@ -62,41 +56,37 @@ export default async function SkillsPage({ params }: PageProps) {
   }
 
   // It's a directory, show contents
-  const items = getDirectoryContents(relativePath)
+  // If path starts with ecash/, strip it since skillsRoot already points to ecash/
+  const adjustedPath = relativePath.startsWith("ecash/") || relativePath === "ecash"
+    ? relativePath.replace(/^ecash\/?/, "")
+    : relativePath
+  const items = getDirectoryContents(adjustedPath || "")
   const breadcrumbs = getBreadcrumbs(relativePath)
 
   return (
-    <div className="min-h-screen">
-      <header className="border-b bg-white sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            返回首页
-          </Link>
+    <div className="min-h-screen bg-white">
+      <div className="border-b">
+        <div className="container mx-auto px-4 py-3">
+          {breadcrumbs.length > 1 && (
+            <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+              <span className="font-medium">ecash</span>
+              {breadcrumbs.slice(1).map((crumb) => (
+                <span key={crumb.path} className="flex items-center">
+                  <ChevronRight className="w-4 h-4 mx-1" />
+                  <Link
+                    href={`/skills/${crumb.path}`}
+                    className="hover:text-foreground"
+                  >
+                    {crumb.name}
+                  </Link>
+                </span>
+              ))}
+            </nav>
+          )}
         </div>
-      </header>
+      </div>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl">
-        {breadcrumbs.length > 1 && (
-          <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
-            <Link href="/skills" className="hover:text-foreground">ecash</Link>
-            {breadcrumbs.slice(1).map((crumb) => (
-              <span key={crumb.path} className="flex items-center">
-                <ChevronRight className="w-4 h-4 mx-1" />
-                <Link
-                  href={`/skills/${crumb.path}`}
-                  className="hover:text-foreground"
-                >
-                  {crumb.name}
-                </Link>
-              </span>
-            ))}
-          </nav>
-        )}
-
         <h1 className="text-2xl font-bold mb-6">
           {relativePath ? relativePath.split("/").pop() : "eCash Skills"}
         </h1>
