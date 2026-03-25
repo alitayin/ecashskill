@@ -47,11 +47,11 @@ export default function Home() {
         <section className="mt-16 bg-muted/50 rounded-xl p-8">
           <h3 className="text-2xl font-semibold mb-4">Quick Install</h3>
           <pre className="bg-background p-4 rounded-lg border text-sm overflow-x-auto">
-            <code>{`# 添加市场
+            <code>{`# Add marketplace
 claude plugin marketplace add https://github.com/alitayin/ecashskill
 
-# 安装 eCash Skills
-claude plugin install ecash@ecash-skills`}</code>
+# Install ecashskill
+claude plugin install ecashskill@ecashskill`}</code>
           </pre>
         </section>
       </main>

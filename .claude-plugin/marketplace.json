@@ -1,12 +1,12 @@
 {
-  "name": "ecash-skills",
+  "name": "ecashskill",
   "owner": {
     "name": "alitayin"
   },
   "plugins": [
     {
-      "name": "ecash",
-      "source": "./plugins/ecash",
+      "name": "ecashskill",
+      "source": "./plugins/ecashskill",
       "description": "Comprehensive eCash blockchain development skills for Claude Code"
     }
   ]

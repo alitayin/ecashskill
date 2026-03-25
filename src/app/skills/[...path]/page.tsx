@@ -27,7 +27,7 @@ export default async function SkillsPage({ params }: PageProps) {
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-                <Link href="/skills" className="hover:text-foreground">ecash</Link>
+                <Link href="/skills" className="hover:text-foreground">ecashskill</Link>
                 {breadcrumbs.slice(1).map((crumb) => (
                   <span key={crumb.path} className="flex items-center">
                     <ChevronRight className="w-4 h-4 mx-1" />
@@ -36,7 +36,7 @@ export default async function SkillsPage({ params }: PageProps) {
                 ))}
               </nav>
             </div>
-            <a href={`/skills/ecash/${relativePath}`} download={filename}>
+            <a href={`/skills/ecashskill/${relativePath}`} download={filename}>
               <Button size="sm">
                 <Download className="w-4 h-4 mr-2" />
                 Download
@@ -56,9 +56,9 @@ export default async function SkillsPage({ params }: PageProps) {
   }
 
   // It's a directory, show contents
-  // If path starts with ecash/, strip it since skillsRoot already points to ecash/
-  const adjustedPath = relativePath.startsWith("ecash/") || relativePath === "ecash"
-    ? relativePath.replace(/^ecash\/?/, "")
+  // If path starts with ecashskill/, strip it since skillsRoot already points to ecashskill/
+  const adjustedPath = relativePath.startsWith("ecashskill/") || relativePath === "ecashskill"
+    ? relativePath.replace(/^ecashskill\/?/, "")
     : relativePath
   const items = getDirectoryContents(adjustedPath || "")
   const breadcrumbs = getBreadcrumbs(relativePath)
@@ -69,7 +69,7 @@ export default async function SkillsPage({ params }: PageProps) {
         <div className="container mx-auto px-4 py-3">
           {breadcrumbs.length > 1 && (
             <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-              <span className="font-medium">ecash</span>
+              <span className="font-medium">ecashskill</span>
               {breadcrumbs.slice(1).map((crumb) => (
                 <span key={crumb.path} className="flex items-center">
                   <ChevronRight className="w-4 h-4 mx-1" />
