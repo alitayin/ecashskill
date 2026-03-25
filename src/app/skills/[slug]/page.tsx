@@ -28,12 +28,12 @@ export default async function SkillPage({ params }: PageProps) {
             <ArrowLeft className="w-4 h-4" /> 返回列表
           </Link>
           <a
-            href={`/skills/ecash/${slug}.md`}
-            download={`${slug}.md`}
+            href={`/skills/ecash/${slug}/SKILL.md`}
+            download={`${slug}-SKILL.md`}
           >
             <Button size="sm">
               <Download className="w-4 h-4 mr-2" />
-              下载 Skill
+              下载 SKILL.md
             </Button>
           </a>
         </div>
@@ -61,14 +61,17 @@ export default async function SkillPage({ params }: PageProps) {
             <div>
               <h3 className="font-medium mb-2">Claude Code</h3>
               <ol className="list-decimal list-inside text-muted-foreground space-y-1">
-                <li>点击上方「下载 Skill」按钮</li>
-                <li>将下载的 <code className="bg-muted px-1 py-0.5 rounded">.md</code> 文件放入项目 <code className="bg-muted px-1 py-0.5 rounded">.claude/skills/</code> 目录</li>
-                <li>Claude Code 会自动加载此 Skill</li>
+                <li>点击上方「下载」按钮获取 SKILL.md</li>
+                <li>放入项目 <code className="bg-muted px-1 py-0.5 rounded">.claude/skills/</code> 目录</li>
+                <li>Claude Code 自动加载此 Skill</li>
               </ol>
             </div>
-            <div>
-              <h3 className="font-medium mb-2">Cursor</h3>
-              <p className="text-muted-foreground">将 Skill 内容添加到项目根目录的 <code className="bg-muted px-1 py-0.5 rounded">.cursorrules</code> 文件中。</p>
+            <div className="mt-4">
+              <h3 className="font-medium mb-2">一键安装</h3>
+              <pre className="bg-background p-3 rounded border text-xs overflow-x-auto">
+                <code>claude plugin marketplace add https://github.com/alitayin/ecashskill{`
+claude plugin install ${slug}@ecash-skills`}</code>
+              </pre>
             </div>
           </div>
         </section>

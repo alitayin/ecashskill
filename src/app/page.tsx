@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Folder } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getAllSkills } from "@/lib/navigation"
@@ -14,7 +14,6 @@ export default function Home() {
           <h1 className="text-xl font-bold">ecashskill</h1>
           <nav className="flex gap-4 text-sm">
             <Link href="/skills" className="hover:text-primary">Skills</Link>
-            <a href="#usage" className="hover:text-primary">使用说明</a>
           </nav>
         </div>
       </header>
@@ -23,27 +22,32 @@ export default function Home() {
         <section className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">eCash AI 开发 Skills</h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            为 Claude Code 和 Cursor 提供的 eCash 区块链开发技能配置
+            为 Claude Code 和 Cursor 提供的 eCash 区块链开发技能市场
           </p>
           <Link href="/skills">
             <Button>浏览 Skills <ArrowRight className="w-4 h-4 ml-2" /></Button>
           </Link>
         </section>
 
-        <section className="mb-16">
+        <section>
           <h3 className="text-2xl font-semibold mb-6">所有 Skills ({skills.length})</h3>
           <div className="grid gap-4 md:grid-cols-2">
             {skills.map((skill) => (
               <Link key={skill.slug} href={`/skills/${skill.slug}`}>
                 <Card className="hover:border-primary transition-colors h-full">
                   <CardHeader>
-                    <CardTitle>{skill.name}</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <Folder className="w-5 h-5 text-primary" />
+                      <CardTitle className="text-lg">{skill.name}</CardTitle>
+                    </div>
                     <CardDescription>{skill.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <span className="inline-flex items-center text-sm text-primary">
-                      查看配置 <ArrowRight className="w-4 h-4 ml-1" />
-                    </span>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span>v{skill.version}</span>
+                      <span>•</span>
+                      <span>{skill.tags?.slice(0, 3).join(", ")}</span>
+                    </div>
                   </CardContent>
                 </Card>
               </Link>
@@ -51,22 +55,15 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="usage" className="bg-muted/50 rounded-xl p-8">
-          <h3 className="text-2xl font-semibold mb-4">使用说明</h3>
-          <div className="space-y-6 text-sm">
-            <div>
-              <h4 className="font-medium mb-2">Claude Code</h4>
-              <p className="text-muted-foreground mb-2">
-                在 Claude Code 对话中，直接粘贴 Skill 中的提示词模板即可使用。
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium mb-2">Cursor</h4>
-              <p className="text-muted-foreground mb-2">
-                复制 Skill 中的 .cursorrules 配置片段，添加到你的项目根目录。
-              </p>
-            </div>
-          </div>
+        <section className="mt-16 bg-muted/50 rounded-xl p-8">
+          <h3 className="text-2xl font-semibold mb-4">快速安装</h3>
+          <pre className="bg-background p-4 rounded-lg border text-sm overflow-x-auto">
+            <code>{`# 添加市场
+claude plugin marketplace add https://github.com/alitayin/ecashskill
+
+# 安装 skill
+claude plugin install <skill-name>@ecash-skills`}</code>
+          </pre>
         </section>
       </main>
 
