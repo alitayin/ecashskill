@@ -1,11 +1,12 @@
 import Link from "next/link"
 import { ArrowLeft, Download, Folder } from "lucide-react"
-import { getAllSkills } from "@/lib/navigation"
+import { getAllSkills, getReferences } from "@/lib/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
 export default function SkillsPage() {
   const skills = getAllSkills()
+  const references = getReferences()
 
   return (
     <div className="min-h-screen">
@@ -24,48 +25,61 @@ export default function SkillsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">eCash Skills</h1>
           <p className="text-muted-foreground">
-            点击文件夹查看详情，点击下载获取完整 Skill 包
+            点击查看详情，点击下载获取完整 Skill 包
           </p>
         </div>
 
-        <div className="space-y-2">
-          {skills.map((skill) => (
-            <div
-              key={skill.slug}
-              className="p-4 rounded-lg border hover:border-primary transition-colors"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3 flex-1">
-                  <Folder className="w-5 h-5 text-primary mt-0.5" />
-                  <div className="flex-1">
-                    <h3 className="font-medium">{skill.name}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">{skill.description}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Badge variant="secondary" className="text-xs">v{skill.version}</Badge>
-                      <div className="flex flex-wrap gap-1">
-                        {skill.tags?.slice(0, 3).map((tag) => (
-                          <span key={tag} className="text-xs bg-muted px-1.5 py-0.5 rounded">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+        {/* Main Skill */}
+        {skills.map((skill) => (
+          <div key={skill.slug} className="mb-8 p-6 rounded-lg border bg-card">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <Folder className="w-6 h-6 text-primary mt-1" />
+                <div>
+                  <h2 className="text-xl font-semibold">{skill.name}</h2>
+                  <p className="text-muted-foreground mt-1">{skill.description}</p>
+                  <div className="flex items-center gap-2 mt-3">
+                    <Badge variant="secondary">v{skill.version}</Badge>
+                    <div className="flex flex-wrap gap-1">
+                      {skill.tags?.slice(0, 4).map((tag) => (
+                        <span key={tag} className="text-xs bg-muted px-2 py-0.5 rounded">
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Link href={`/skills/${skill.slug}`}>
-                    <Button variant="outline" size="sm">查看详情</Button>
-                  </Link>
-                  <a href={`/skills/ecash/${skill.slug}/SKILL.md`} download={`${skill.slug}-SKILL.md`}>
-                    <Button size="sm">
-                      <Download className="w-4 h-4 mr-1" />
-                      下载
-                    </Button>
-                  </a>
-                </div>
               </div>
+              <a href={`/skills/ecash/SKILL.md`} download={`ecash-SKILL.md`}>
+                <Button>
+                  <Download className="w-4 h-4 mr-2" />
+                  下载 SKILL.md
+                </Button>
+              </a>
             </div>
-          ))}
+          </div>
+        ))}
+
+        {/* References */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-4">包含的工具参考</h3>
+          <div className="space-y-2">
+            {references.map((ref) => (
+              <Link
+                key={ref.slug}
+                href={`/skills/${ref.slug}`}
+                className="block p-4 rounded-lg border hover:border-primary hover:bg-muted/50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium">{ref.name}</h4>
+                    <p className="text-sm text-muted-foreground">{ref.description}</p>
+                  </div>
+                  <span className="text-sm text-primary">查看详情 →</span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </main>
     </div>

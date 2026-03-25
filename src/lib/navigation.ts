@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 
-const skillsDirectory = path.join(process.cwd(), "skills")
+const skillsDirectory = path.join(process.cwd(), "public/skills/ecash")
 
 export interface SkillMeta {
   name: string
@@ -12,75 +12,67 @@ export interface SkillMeta {
   slug: string
 }
 
-export interface SkillCategory {
+export interface Reference {
+  slug: string
   name: string
-  skills: SkillMeta[]
+  description: string
 }
 
 export function getAllSkills(): SkillMeta[] {
-  const dirs = fs.readdirSync(skillsDirectory).filter((d) => {
-    const stat = fs.statSync(path.join(skillsDirectory, d))
-    return stat.isDirectory() && d !== 'references'
-  })
-  const skills = dirs
-    .filter((dir) => fs.existsSync(path.join(skillsDirectory, dir, "SKILL.md")))
-    .map((dir) => {
-      const fullPath = path.join(skillsDirectory, dir, "SKILL.md")
-      const fileContents = fs.readFileSync(fullPath, "utf8")
-      const { data } = matter(fileContents)
-      return {
-        slug: dir,
-        ...(data as Omit<SkillMeta, "slug">),
-      }
-    })
-  return skills.sort((a, b) => a.name.localeCompare(b.name))
+  const skillPath = path.join(skillsDirectory, "SKILL.md")
+  if (!fs.existsSync(skillPath)) {
+    return []
+  }
+  const fileContents = fs.readFileSync(skillPath, "utf8")
+  const { data } = matter(fileContents)
+  return [{
+    slug: "ecash",
+    ...(data as Omit<SkillMeta, "slug">),
+  }]
 }
 
-export function getSkillsByCategory(): SkillCategory[] {
-  const skills = getAllSkills()
-
-  const categoryMap: Record<string, SkillMeta[]> = {
-    infrastructure: [],
-    utilities: [],
-    transaction: [],
-    wallet: [],
-    applications: [],
+export function getReferences(): Reference[] {
+  const refsDir = path.join(skillsDirectory, "references")
+  if (!fs.existsSync(refsDir)) {
+    return []
   }
-
-  skills.forEach((skill) => {
-    const tags = skill.tags || []
-    if (tags.includes("node") || tags.includes("blockchain") || tags.includes("indexer")) {
-      categoryMap.infrastructure.push(skill)
-    } else if (tags.includes("wallet") || tags.includes("hd")) {
-      categoryMap.wallet.push(skill)
-    } else if (tags.includes("transaction") || tags.includes("signing")) {
-      categoryMap.transaction.push(skill)
-    } else if (tags.includes("application") || tags.includes("app")) {
-      categoryMap.applications.push(skill)
-    } else {
-      categoryMap.utilities.push(skill)
+  const files = fs.readdirSync(refsDir).filter(f => f.endsWith(".md"))
+  return files.map(file => {
+    const slug = file.replace(".md", "")
+    const fullPath = path.join(refsDir, file)
+    const fileContents = fs.readFileSync(fullPath, "utf8")
+    const { data } = matter(fileContents)
+    return {
+      slug,
+      name: (data as any).name || slug,
+      description: (data as any).description || "",
     }
-  })
-
-  return [
-    { name: "基础设施", skills: categoryMap.infrastructure },
-    { name: "工具库", skills: categoryMap.utilities },
-    { name: "交易签名", skills: categoryMap.transaction },
-    { name: "钱包", skills: categoryMap.wallet },
-    { name: "应用", skills: categoryMap.applications },
-  ].filter((cat) => cat.skills.length > 0)
+  }).sort((a, b) => a.name.localeCompare(b.name))
 }
 
 export function getSkill(slug: string): (SkillMeta & { content: string }) | null {
-  const fullPath = path.join(skillsDirectory, slug, "SKILL.md")
-  if (!fs.existsSync(fullPath)) {
+  const skillPath = path.join(skillsDirectory, "SKILL.md")
+  if (!fs.existsSync(skillPath)) {
     return null
   }
-  const fileContents = fs.readFileSync(fullPath, "utf8")
+  const fileContents = fs.readFileSync(skillPath, "utf8")
   const { data, content } = matter(fileContents)
   return {
-    slug,
+    slug: "ecash",
     content,
     ...(data as Omit<SkillMeta, "slug">),
+  }
+}
+
+export function getReference(slug: string): { name: string, content: string } | null {
+  const refPath = path.join(skillsDirectory, "references", `${slug}.md`)
+  if (!fs.existsSync(refPath)) {
+    return null
+  }
+  const fileContents = fs.readFileSync(refPath, "utf8")
+  const { data, content } = matter(fileContents)
+  return {
+    name: (data as any).name || slug,
+    content,
   }
 }

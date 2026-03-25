@@ -1,11 +1,12 @@
 import Link from "next/link"
-import { ArrowRight, Folder } from "lucide-react"
+import { ArrowRight, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { getAllSkills } from "@/lib/navigation"
+import { getAllSkills, getReferences } from "@/lib/navigation"
 
 export default function Home() {
   const skills = getAllSkills()
+  const references = getReferences()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
@@ -22,35 +23,23 @@ export default function Home() {
         <section className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">eCash AI 开发 Skills</h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            为 Claude Code 和 Cursor 提供的 eCash 区块链开发技能市场
+            为 Claude Code 提供的 eCash 区块链开发技能，包含完整工具生态参考
           </p>
           <Link href="/skills">
-            <Button>浏览 Skills <ArrowRight className="w-4 h-4 ml-2" /></Button>
+            <Button>查看详情 <ArrowRight className="w-4 h-4 ml-2" /></Button>
           </Link>
         </section>
 
         <section>
-          <h3 className="text-2xl font-semibold mb-6">所有 Skills ({skills.length})</h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            {skills.map((skill) => (
-              <Link key={skill.slug} href={`/skills/${skill.slug}`}>
-                <Card className="hover:border-primary transition-colors h-full">
-                  <CardHeader>
-                    <div className="flex items-center gap-2">
-                      <Folder className="w-5 h-5 text-primary" />
-                      <CardTitle className="text-lg">{skill.name}</CardTitle>
-                    </div>
-                    <CardDescription>{skill.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span>v{skill.version}</span>
-                      <span>•</span>
-                      <span>{skill.tags?.slice(0, 3).join(", ")}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
+          <h3 className="text-2xl font-semibold mb-6">包含的工具参考</h3>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {references.map((ref) => (
+              <Card key={ref.slug} className="hover:border-primary transition-colors">
+                <CardHeader>
+                  <CardTitle className="text-lg">{ref.name}</CardTitle>
+                  <CardDescription className="text-sm">{ref.description}</CardDescription>
+                </CardHeader>
+              </Card>
             ))}
           </div>
         </section>
@@ -61,8 +50,8 @@ export default function Home() {
             <code>{`# 添加市场
 claude plugin marketplace add https://github.com/alitayin/ecashskill
 
-# 安装 skill
-claude plugin install <skill-name>@ecash-skills`}</code>
+# 安装 eCash Skills
+claude plugin install ecash@ecash-skills`}</code>
           </pre>
         </section>
       </main>
