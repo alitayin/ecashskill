@@ -138,31 +138,31 @@ export default function Home() {
               <CardHeader>
                 <CardTitle>Cursor Agent Skills</CardTitle>
                 <CardDescription>
-                  Install eCash skills for Cursor — project-level or global
+                  Install eCash skills via the skills CLI
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Option 1: Project-level (recommended)</h3>
+                  <h3 className="text-sm font-medium">Install with skills CLI</h3>
                   <p className="text-sm text-muted-foreground">
-                    Clone or copy the skills into your project&apos;s <code className="bg-muted px-1 rounded">.agents/skills/</code> directory. Cursor auto-discovers skills from this location.
+                    Run the following command in your project directory. No installation required — skills are auto-discovered by Cursor from <code className="bg-muted px-1 rounded">.agents/skills/</code>.
                   </p>
                   <CodeBlock
                     language="bash"
-                    code={"git clone https://github.com/alitayin/ecashskill\ncp -r ecashskill/.agents/skills/ecash-* .agents/skills/"}
+                    code={"npx skills add alitayin/ecashskill"}
                   />
                 </div>
 
                 <Separator />
 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Option 2: Global (all projects)</h3>
+                  <h3 className="text-sm font-medium">Global install (all projects)</h3>
                   <p className="text-sm text-muted-foreground">
-                    Copy to <code className="bg-muted px-1 rounded">~/.cursor/skills/</code> to make these skills available in every Cursor project.
+                    To make these skills available in every project, copy to your global Cursor skills directory:
                   </p>
                   <CodeBlock
                     language="bash"
-                    code={"git clone https://github.com/alitayin/ecashskill\ncp -r ecashskill/.agents/skills/ecash-* ~/.cursor/skills/"}
+                    code={"npx skills add alitayin/ecashskill\ncp -r .agents/skills/* ~/.cursor/skills/"}
                   />
                 </div>
 
