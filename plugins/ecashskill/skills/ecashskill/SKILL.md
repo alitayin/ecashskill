@@ -9,9 +9,35 @@ tags: [ecash, blockchain, bitcoin-abc, chronik, wallet, tokens, xec]
 
 This skill provides comprehensive development capabilities for eCash blockchain applications using Claude Code.
 
-## Overview
+## What is eCash?
 
-eCash is a cryptocurrency that builds on Bitcoin ABC node technology. This skill covers the entire eCash development ecosystem.
+eCash (XEC) is a cryptocurrency that forked from Bitcoin Cash in 2021, built on Bitcoin ABC node technology. It uses the Avalanche consensus mechanism for fast transaction finality and supports both SLP and ALP token standards.
+
+**Key Facts:**
+- **Token**: XEC (1 XEC = 100 satoshis)
+- **Address Format**: CashAddr with `ecash:` prefix
+- **BIP44 Coin Type**: 1899
+- **Node Implementation**: Bitcoin ABC
+- **Consensus**: Avalanche (fast finality)
+- **Website**: https://e.cash
+
+## References Overview
+
+The `references/` folder contains documentation for different tools and libraries:
+
+| Reference | Purpose | When to Use |
+|-----------|---------|-------------|
+| `chronik/` | Blockchain indexer API | Querying blockchain data, WebSocket subscriptions |
+| `chronik-client.md` | Client library for Chronik | Most development work involving blockchain queries |
+| `ecash-lib.md` | Transaction building & signing | Creating raw transactions, custom signing logic |
+| `ecash-wallet.md` | HD wallet implementation | Managing wallets, sending XEC/tokens |
+| `ecashaddrjs.md` | Address encoding/decoding | Address validation, format conversion |
+| `ecash-agora.md` | Decentralized exchange protocol | Building marketplaces, token trading |
+| `cashtab.md` | Web wallet reference | Reference implementation, wallet UI patterns |
+| `cashtab-connect.md` | Browser extension integration | DApp wallet connection |
+| `bitcoin-abc.md` | Node implementation | Contributing to Bitcoin ABC, understanding internals |
+| `mock-chronik-client.md` | Testing utilities | Writing unit tests |
+| `examples.md` | Code examples | Quick reference for common patterns |
 
 ## When to Use
 
@@ -64,6 +90,10 @@ For more available Chronik nodes, see [https://chronik.cash](https://chronik.cas
 - "Parse an eCash address"
 - "Build a wallet from mnemonic"
 - "Work with SLP/ALP tokens"
+
+## Cursor Users
+
+If using Cursor, see `CURSOR.md` for `.cursorrules` configurations.
 
 ## References
 
