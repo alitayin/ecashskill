@@ -81,9 +81,10 @@ export default function Home() {
         <Separator className="my-12" />
 
         <Tabs defaultValue="claude" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="claude">Claude Code</TabsTrigger>
             <TabsTrigger value="cursor">Cursor</TabsTrigger>
+            <TabsTrigger value="others">OpenClaw &amp; 33 more</TabsTrigger>
           </TabsList>
 
           <TabsContent value="claude" className="space-y-6">
@@ -185,6 +186,49 @@ export default function Home() {
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
                       Skills are auto-discovered by Cursor from <code className="bg-muted px-1 rounded">.agents/skills/</code> and applied automatically when relevant. You can also invoke any skill manually with <code className="bg-muted px-1 rounded">/skill-name</code> in Agent chat.
+                    </p>
+                  </CardContent>
+                </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="others" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>OpenClaw &amp; 33 More Agents</CardTitle>
+                <CardDescription>
+                  Install via the skills CLI — works with any Agent Skills compatible tool
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <h3 className="text-sm font-medium">Install with skills CLI</h3>
+                  <p className="text-sm text-muted-foreground">
+                    The <code className="bg-muted px-1 rounded">npx skills</code> CLI automatically installs and configures skills for your agent. Works with OpenClaw, Windsurf, Copilot, and any other Agent Skills compatible tool.
+                  </p>
+                  <CodeBlock
+                    language="bash"
+                    code={"npx skills add alitayin/ecashskill"}
+                  />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-2">
+                  <h3 className="text-sm font-medium">How it works</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Agent Skills is an open standard. The CLI downloads the skill into your project&apos;s <code className="bg-muted px-1 rounded">.agents/skills/</code> directory, which is auto-discovered by any compatible agent.
+                  </p>
+                </div>
+
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">Tip</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Browse more skills and see the leaderboard at <a href="https://skills.sh" target="_blank" rel="noopener noreferrer" className="text-primary underline">skills.sh</a>.
                     </p>
                   </CardContent>
                 </Card>
