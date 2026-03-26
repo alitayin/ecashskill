@@ -53,7 +53,7 @@ export default function Home() {
       <ParticleBackground />
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         <section className="text-center mb-16 space-y-4">
-          <Badge variant="secondary" className="mb-4">v1.0.0</Badge>
+          <Badge variant="secondary" className="mb-4">v0.1</Badge>
           <h2 className="text-4xl font-bold tracking-tight">eCash AI Development Skills</h2>
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
             Comprehensive eCash blockchain development skills for Claude Code and Cursor
@@ -117,6 +117,26 @@ export default function Home() {
                   <CodeBlock
                     language="bash"
                     code={"claude plugin list"}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Option 2: skills CLI</CardTitle>
+                <CardDescription>
+                  Install via the Agent Skills standard CLI
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Claude Code also supports Agent Skills. Run in your project directory:
+                  </p>
+                  <CodeBlock
+                    language="bash"
+                    code={"npx skills add alitayin/ecashskill"}
                   />
                 </div>
               </CardContent>
