@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { BookOpen, Code, FolderOpen, FileText } from "lucide-react"
+import { BookOpen, Code } from "lucide-react"
 
 export function Header() {
   return (
@@ -10,20 +10,6 @@ export function Header() {
           ecashskill
         </Link>
         <nav className="flex gap-1">
-          <Link
-            href="/guides"
-            className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-md hover:bg-muted transition-colors"
-          >
-            <FolderOpen className="w-4 h-4" />
-            Guides
-          </Link>
-          <Link
-            href="/reference"
-            className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-md hover:bg-muted transition-colors"
-          >
-            <FileText className="w-4 h-4" />
-            Reference
-          </Link>
           <Link
             href="/skills"
             className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
