@@ -91,10 +91,6 @@ For more available Chronik nodes, see [https://chronik.cash](https://chronik.cas
 - "Build a wallet from mnemonic"
 - "Work with SLP/ALP tokens"
 
-## Cursor Users
-
-If using Cursor, see `CURSOR.md` for `.cursorrules` configurations.
-
 ## References
 
 All tool documentation is available in the `references/` folder.

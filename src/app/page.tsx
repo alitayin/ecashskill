@@ -424,16 +424,6 @@ export default function Home() {
               </li>
               <li>
                 <a
-                  href="/skills/CURSOR.md"
-                  className="flex items-center gap-3 p-4 hover:bg-muted transition-colors"
-                >
-                  <File className="w-5 h-5 text-muted-foreground" />
-                  <span>CURSOR.md</span>
-                  <span className="text-sm text-muted-foreground ml-2">Full Cursor rules</span>
-                </a>
-              </li>
-              <li>
-                <a
                   href="/skills/references"
                   className="flex items-center gap-3 p-4 hover:bg-muted transition-colors"
                 >
