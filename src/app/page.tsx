@@ -174,13 +174,7 @@ export default function Home() {
                     Cursor will auto-discover these skills from <code className="bg-muted px-1 rounded">.agents/skills/</code>:
                   </p>
                   <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-                    <li><strong>ecash-core</strong> — XEC basics, address format, quick start</li>
-                    <li><strong>chronik</strong> — Blockchain indexer &amp; chronik-client</li>
-                    <li><strong>ecash-lib</strong> — Transaction building &amp; signing</li>
-                    <li><strong>ecash-wallet</strong> — HD wallet management</li>
-                    <li><strong>ecash-agora</strong> — Decentralized exchange protocol</li>
-                    <li><strong>cashtab</strong> — Web wallet &amp; browser extension</li>
-                    <li><strong>ecash-testing</strong> — Mock utilities for unit tests</li>
+                    <li><strong>ecashskill</strong> — Full eCash development skill with all references (chronik, ecash-lib, ecash-wallet, ecash-agora, cashtab, testing)</li>
                   </ul>
                 </div>
 
@@ -208,12 +202,12 @@ export default function Home() {
               <ul className="divide-y">
                 <li>
                   <a
-                    href="/skills/ecash-core/SKILL.md"
+                    href="/skills/ecashskill/SKILL.md"
                     className="flex items-center gap-3 p-4 hover:bg-muted transition-colors"
                   >
                     <File className="w-5 h-5 text-muted-foreground" />
-                    <span className="font-medium">ecash-core/SKILL.md</span>
-                    <span className="text-sm text-muted-foreground ml-auto">Core skill</span>
+                    <span className="font-medium">ecashskill/SKILL.md</span>
+                    <span className="text-sm text-muted-foreground ml-auto">Main skill</span>
                   </a>
                 </li>
                 <li>

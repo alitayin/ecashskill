@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
 
 export default function SkillsPage() {
-  redirect("/skills/ecash-core")
+  redirect("/skills/ecashskill")
 }
