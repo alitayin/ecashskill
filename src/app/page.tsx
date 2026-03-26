@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { ParticleBackground } from "@/components/ParticleBackground"
+import { AuroraBackground } from "@/components/AuroraBackground"
 
 function CodeBlock({ code, language }: { code: string; language: string }) {
   const [copied, setCopied] = useState(false)
@@ -317,6 +318,7 @@ const cursorRulesFull = `# eCash Development Rules for Cursor
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
+      <AuroraBackground />
       <ParticleBackground />
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         <section className="text-center mb-16 space-y-4">
