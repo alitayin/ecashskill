@@ -28,7 +28,7 @@ export default function GuidesPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Guides</h1>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Guides</h1>
         <p className="text-muted-foreground">
           从入门到进阶的完整教程
         </p>
@@ -57,7 +57,7 @@ export default function GuidesPage() {
             <CardContent>
               <Link
                 href={`/guides/${guide.slug}`}
-                className="inline-flex items-center text-sm text-primary hover:underline"
+                className="inline-flex items-center text-sm text-primary hover:underline transition-colors"
               >
                 开始阅读 <ArrowRight className="w-4 h-4 ml-1" />
               </Link>

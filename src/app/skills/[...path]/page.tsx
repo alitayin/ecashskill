@@ -3,6 +3,9 @@ import Link from "next/link"
 import { File, Folder, Download, ChevronRight } from "lucide-react"
 import { getDirectoryContents, getFileContent, getBreadcrumbs } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 import { marked } from "marked"
 
 interface PageProps {
@@ -22,23 +25,23 @@ export default async function SkillsPage({ params }: PageProps) {
     const breadcrumbs = getBreadcrumbs(relativePath.slice(0, relativePath.lastIndexOf("/")))
 
     return (
-      <div className="min-h-screen bg-white">
-        <div className="border-b">
+      <div className="min-h-screen bg-background">
+        <div className="border-b bg-card">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-                <Link href="/skills" className="hover:text-foreground">ecashskill</Link>
+                <Link href="/skills" className="hover:text-foreground transition-colors">ecashskill</Link>
                 {breadcrumbs.slice(1).map((crumb) => (
                   <span key={crumb.path} className="flex items-center">
-                    <ChevronRight className="w-4 h-4 mx-1" />
-                    <span className="font-medium">{crumb.name}</span>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+                    <span className="font-medium text-foreground">{crumb.name}</span>
                   </span>
                 ))}
               </nav>
             </div>
             <a href={`/skills/ecashskill/${relativePath}`} download={filename}>
-              <Button size="sm">
-                <Download className="w-4 h-4 mr-2" />
+              <Button size="sm" variant="outline">
+                <Download className="w-4 h-4 mr-2" data-icon="inline-start" />
                 Download
               </Button>
             </a>
@@ -46,7 +49,7 @@ export default async function SkillsPage({ params }: PageProps) {
         </div>
 
         <main className="container mx-auto px-4 py-8 max-w-4xl">
-          <h1 className="text-3xl font-bold mb-6">{filename}</h1>
+          <h1 className="text-3xl font-bold tracking-tight mb-6">{filename}</h1>
           <article className="prose max-w-none">
             <div dangerouslySetInnerHTML={{ __html: marked.parse(file.content) }} />
           </article>
@@ -64,18 +67,18 @@ export default async function SkillsPage({ params }: PageProps) {
   const breadcrumbs = getBreadcrumbs(relativePath)
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="border-b">
+    <div className="min-h-screen bg-background">
+      <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-3">
           {breadcrumbs.length > 1 && (
             <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-              <span className="font-medium">ecashskill</span>
+              <span className="font-medium text-foreground">ecashskill</span>
               {breadcrumbs.slice(1).map((crumb) => (
                 <span key={crumb.path} className="flex items-center">
-                  <ChevronRight className="w-4 h-4 mx-1" />
+                  <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
                   <Link
                     href={`/skills/${crumb.path}`}
-                    className="hover:text-foreground"
+                    className="hover:text-foreground transition-colors"
                   >
                     {crumb.name}
                   </Link>
@@ -87,38 +90,43 @@ export default async function SkillsPage({ params }: PageProps) {
       </div>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl">
-        <h1 className="text-2xl font-bold mb-6">
+        <h1 className="text-2xl font-bold tracking-tight mb-6">
           {relativePath ? relativePath.split("/").pop() : "eCash Skills"}
         </h1>
 
-        <div className="bg-muted/50 rounded-lg border">
-          {items.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground">Empty directory</div>
-          ) : (
-            <ul className="divide-y">
-              {items.map((item) => (
-                <li key={item.path}>
-                  <Link
-                    href={item.type === "directory" ? `/skills/${item.path}` : `/skills/${item.path}`}
-                    className="flex items-center gap-3 p-4 hover:bg-muted transition-colors"
-                  >
-                    {item.type === "directory" ? (
-                      <Folder className="w-5 h-5 text-primary" />
-                    ) : (
-                      <File className="w-5 h-5 text-muted-foreground" />
-                    )}
-                    <span className={item.type === "directory" ? "font-medium" : ""}>
-                      {item.name}
-                    </span>
-                    {item.type === "directory" && (
-                      <ChevronRight className="w-4 h-4 text-muted-foreground ml-auto" />
-                    )}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <Card>
+          <CardContent className="p-0">
+            {items.length === 0 ? (
+              <div className="p-8 text-center text-muted-foreground">Empty directory</div>
+            ) : (
+              <ul className="divide-y">
+                {items.map((item) => (
+                  <li key={item.path}>
+                    <Link
+                      href={item.type === "directory" ? `/skills/${item.path}` : `/skills/${item.path}`}
+                      className="flex items-center gap-3 p-4 hover:bg-muted transition-colors"
+                    >
+                      {item.type === "directory" ? (
+                        <Folder className="w-5 h-5 text-primary" />
+                      ) : (
+                        <File className="w-5 h-5 text-muted-foreground" />
+                      )}
+                      <span className={item.type === "directory" ? "font-medium" : ""}>
+                        {item.name}
+                      </span>
+                      <Badge variant="secondary" className="ml-auto text-xs">
+                        {item.type}
+                      </Badge>
+                      {item.type === "directory" && (
+                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
       </main>
     </div>
   )
