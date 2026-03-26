@@ -294,7 +294,23 @@ const cursorRulesFull = `# eCash Development Rules for Cursor
       statement: |
         # Testing Requirements
         - All new features must have unit tests
-        - Use describe/it style`
+        - Use describe/it style
+
+- name: "ecash-quicksend"
+  description: "Quick transaction sender for simple payments"
+  files:
+    - "**/*quicksend*"
+    - "**/*payment*"
+    - "**/simple/**/*.ts"
+  rules:
+    - type: "import"
+      statement: |
+        import { Quicksend } from 'ecash-quicksend';
+    - type: "note"
+      statement: |
+        // Note: ecash-quicksend is for simple payments and prototypes
+        // For large production projects, use ecash-wallet with ecash-lib
+        // Limited maintenance - not suitable for production-critical apps
 
 export default function Home() {
   return (

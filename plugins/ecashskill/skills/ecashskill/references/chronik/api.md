@@ -14,9 +14,13 @@ GET /token/:txid                 # Token info
 ## WebSocket Message Types
 
 ```
-BLK_CONNECTED = 0       # Block connected
-TX_ADDED_TO_MEMPOOL = 0 # Tx entered mempool
-TX_CONFIRMED = 2        # Tx confirmed
+BLK_CONNECTED        # Block connected
+BLK_DISCONNECTED     # Block disconnected
+BLK_FINALIZED        # Block Avalanche finalized
+TX_ADDED_TO_MEMPOOL  # Tx entered mempool
+TX_REMOVED_FROM_MEMPOOL # Tx removed from mempool
+TX_CONFIRMED         # Tx confirmed
+TX_FINALIZED        # Tx Avalanche finalized
 ```
 
 ## Token Types

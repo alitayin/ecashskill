@@ -9,6 +9,8 @@ tags: [wallet, web, reference, implementation, badger]
 
 Full-featured eCash web wallet - reference implementation.
 
+**Note**: Cashtab is a web application, not an npm package. Use `ecash-wallet` for library integration.
+
 **Website**: https://wallet.badger.cash/
 **Repo**: github.com/badger-cash/cashtab
 

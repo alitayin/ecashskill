@@ -16,7 +16,7 @@ eCash (XEC) is a cryptocurrency that forked from Bitcoin Cash in 2021, built on 
 **Key Facts:**
 - **Token**: XEC (1 XEC = 100 satoshis)
 - **Address Format**: CashAddr with `ecash:` prefix
-- **BIP44 Coin Type**: 1899
+- **BIP44 Coin Type**: Varies by wallet - ecash-wallet uses 1899, Electrum ABC uses 899
 - **Node Implementation**: Bitcoin ABC
 - **Consensus**: Avalanche (fast finality)
 - **Website**: https://e.cash
@@ -33,6 +33,7 @@ The `references/` folder contains documentation for different tools and librarie
 | `ecash-wallet.md` | HD wallet implementation | Managing wallets, sending XEC/tokens |
 | `ecashaddrjs.md` | Address encoding/decoding | Address validation, format conversion |
 | `ecash-agora.md` | Decentralized exchange protocol | Building marketplaces, token trading |
+| `ecash-quicksend.md` | Quick transaction sending | Simple payments, prototypes, small projects |
 | `cashtab.md` | Web wallet reference | Reference implementation, wallet UI patterns |
 | `cashtab-connect.md` | Browser extension integration | DApp wallet connection |
 | `bitcoin-abc.md` | Node implementation | Contributing to Bitcoin ABC, understanding internals |
@@ -58,6 +59,7 @@ Use this skill when:
 
 ### Transaction & Signing
 - **ecash-lib** - Transaction building and signing (see `references/ecash-lib.md`)
+- **ecash-quicksend** - Simple transaction sender for quick payments (see `references/ecash-quicksend.md`)
 
 ### Wallet
 - **ecash-wallet** - HD wallet with XEC and token support (see `references/ecash-wallet.md`)

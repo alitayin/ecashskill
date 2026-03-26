@@ -57,7 +57,9 @@ m/44'/1899'/<accountNumber>'/0/<index>  // Receive
 m/44'/1899'/<accountNumber>'/1/<index>  // Change
 ```
 
-**1899** is the BIP44 coin type for eCash.
+**1899** is the BIP44 coin type used by ecash-wallet (Bitcoin ABC official).
+
+Note: Other wallets may use different coin types (e.g., Electrum ABC uses 899).
 
 ## API Reference
 
