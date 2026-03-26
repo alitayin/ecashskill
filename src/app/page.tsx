@@ -266,11 +266,11 @@ export default function Home() {
               <ul className="divide-y">
                 <li>
                   <a
-                    href="/skills/ecashskill/SKILL.md"
+                    href="/skills/SKILL.md"
                     className="flex items-center gap-3 p-4 hover:bg-muted transition-colors"
                   >
                     <File className="w-5 h-5 text-muted-foreground" />
-                    <span className="font-medium">ecashskill/SKILL.md</span>
+                    <span className="font-medium">SKILL.md</span>
                     <span className="text-sm text-muted-foreground ml-auto">Main skill</span>
                   </a>
                 </li>
