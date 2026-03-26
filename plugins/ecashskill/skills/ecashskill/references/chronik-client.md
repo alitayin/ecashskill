@@ -17,7 +17,7 @@ JavaScript/TypeScript client for Chronik Indexer API.
 ```typescript
 import { ChronikClient } from 'chronik-client';
 
-const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
+const chronik = new ChronikClient(['https://chronik.e.cash/']);
 ```
 
 ## Common Queries

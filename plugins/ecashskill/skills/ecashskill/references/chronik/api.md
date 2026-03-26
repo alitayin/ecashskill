@@ -33,5 +33,5 @@ ALP_TOKEN_TYPE_STANDARD = 0
 
 ## Recommended Nodes
 
-- `https://chronik.e.cash/xec`
+- `https://chronik.e.cash`
 - `http://localhost:8331` (local Bitcoin ABC)

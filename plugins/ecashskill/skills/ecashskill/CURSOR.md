@@ -21,7 +21,7 @@ This file contains `.cursorrules` configurations for eCash development in Cursor
         // Recommended to use ConnectionStrategy.ClosestFirst for auto-selecting optimal node
         const chronik = await ChronikClient.useStrategy(
           ConnectionStrategy.ClosestFirst,
-          ['https://chronik.e.cash/xec']
+          ['https://chronik.e.cash']
         );
 
     - type: "error-handling"
@@ -77,7 +77,7 @@ When writing code involving chronik-client:
     - type: "initialization"
       statement: |
         // Wallet initialization flow
-        const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
+        const chronik = new ChronikClient(['https://chronik.e.cash/']);
         const wallet = Wallet.fromMnemonic(mnemonic, chronik);
         await wallet.sync(); // Sync UTXOs and balance
 

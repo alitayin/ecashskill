@@ -5,12 +5,6 @@ import { ArrowRight } from "lucide-react"
 
 const guides = [
   {
-    slug: "deployment",
-    title: "部署指南",
-    description: "Claude Code 和 Cursor 的安装配置指南",
-    difficulty: "入门",
-  },
-  {
     slug: "quickstart",
     title: "快速入门",
     description: "5分钟搭建你的第一个 eCash AI 应用",

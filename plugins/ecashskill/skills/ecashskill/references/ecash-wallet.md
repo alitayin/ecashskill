@@ -18,7 +18,7 @@ HD wallet library for eCash with XEC and token support.
 import { Wallet, WatchOnlyWallet } from 'ecash-wallet';
 import { ChronikClient } from 'chronik-client';
 
-const chronik = new ChronikClient(['https://chronik.e.cash/xec']);
+const chronik = new ChronikClient(['https://chronik.e.cash/']);
 const wallet = Wallet.fromMnemonic('your mnemonic here', chronik);
 await wallet.sync();
 ```
