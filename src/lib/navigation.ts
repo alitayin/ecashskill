@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 
-const skillsRoot = path.join(process.cwd(), ".agents/skills")
+const skillsRoot = path.join(process.cwd(), "plugins/ecashskill/skills/ecashskill")
 
 export interface FileItem {
   name: string
