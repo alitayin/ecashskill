@@ -6,12 +6,14 @@ import React from "react"
 interface AuroraBackgroundProps extends React.HTMLProps<HTMLDivElement> {
   children?: React.ReactNode
   showRadialGradient?: boolean
+  invert?: boolean
 }
 
 export function AuroraBackground({
   children,
   className,
   showRadialGradient = true,
+  invert = false,
   ...props
 }: AuroraBackgroundProps) {
   return (
@@ -24,7 +26,7 @@ export function AuroraBackground({
     >
       <div
         className={cn(
-          "absolute -inset-[10px] opacity-50 blur-[10px] will-change-transform animate-aurora invert dark:invert-0",
+          cn("absolute -inset-[10px] opacity-50 blur-[10px] will-change-transform animate-aurora", invert && "invert dark:invert-0"),
           showRadialGradient &&
             "[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,transparent_70%)]"
         )}
