@@ -138,34 +138,31 @@ export default function Home() {
               <CardHeader>
                 <CardTitle>Cursor Agent Skills</CardTitle>
                 <CardDescription>
-                  Install eCash skills for Cursor via GitHub remote rule
+                  Install eCash skills for Cursor — project-level or global
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Install from GitHub</h3>
-                  <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
-                    <li>Open Cursor Settings (<code className="bg-muted px-1 rounded">Cmd+Shift+J</code>)</li>
-                    <li>Navigate to <strong>Rules</strong></li>
-                    <li>In Project Rules, click <strong>Add Rule → Remote Rule (Github)</strong></li>
-                    <li>Enter the repository URL below</li>
-                  </ol>
+                  <h3 className="text-sm font-medium">Option 1: Project-level (recommended)</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Clone or copy the skills into your project&apos;s <code className="bg-muted px-1 rounded">.agents/skills/</code> directory. Cursor auto-discovers skills from this location.
+                  </p>
                   <CodeBlock
                     language="bash"
-                    code={"https://github.com/alitayin/ecashskill"}
+                    code={"git clone https://github.com/alitayin/ecashskill\ncp -r ecashskill/.agents/skills/ecash-* .agents/skills/"}
                   />
                 </div>
 
                 <Separator />
 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Or install manually</h3>
+                  <h3 className="text-sm font-medium">Option 2: Global (all projects)</h3>
                   <p className="text-sm text-muted-foreground">
-                    Clone the repo and place the skills folder in your project:
+                    Copy to <code className="bg-muted px-1 rounded">~/.cursor/skills/</code> to make these skills available in every Cursor project.
                   </p>
                   <CodeBlock
                     language="bash"
-                    code={"cp -r ecashskill/.agents/skills .agents/skills"}
+                    code={"git clone https://github.com/alitayin/ecashskill\ncp -r ecashskill/.agents/skills/ecash-* ~/.cursor/skills/"}
                   />
                 </div>
 
