@@ -46,273 +46,6 @@ function CodeBlock({ code, language }: { code: string; language: string }) {
   )
 }
 
-const cursorRulesFull = `# eCash Development Rules for Cursor
-# See: https://github.com/alitayin/ecashskill
-
-- name: "chronik-client"
-  description: "eCash Chronik Indexer API client configuration"
-  files:
-    - "**/*chronik*"
-    - "**/wallet/**/*.ts"
-    - "**/blockchain/**/*.ts"
-  rules:
-    - type: "import"
-      statement: |
-        import { ChronikClient, ConnectionStrategy } from 'chronik-client';
-    - type: "best-practice"
-      statement: |
-        // Recommended to use ConnectionStrategy.ClosestFirst for auto-selecting optimal node
-        const chronik = await ChronikClient.useStrategy(
-          ConnectionStrategy.ClosestFirst,
-          ['https://chronik.e.cash']
-        );
-    - type: "error-handling"
-      statement: |
-        // Handle chronik connection errors
-        try {
-          const tx = await chronik.tx(txid);
-        } catch (error) {
-          if (error.message.includes('Not Found')) {
-            console.error('Transaction not found:', txid);
-          } else if (error.message.includes('timeout')) {
-            console.error('Chronik request timeout');
-          }
-        }
-    - type: "websocket"
-      statement: |
-        // Remember to handle disconnection and reconnection after WebSocket subscription
-        const ws = chronik.ws({
-          onMessage: handleMessage,
-          onReconnect: (e) => console.log('Reconnecting...'),
-          autoReconnect: true,
-          keepAlive: true,
-        });
-
-- name: "ecash-lib"
-  description: "eCash transaction building and signing library"
-  files:
-    - "**/*wallet*"
-    - "**/*tx*"
-    - "**/*sign*"
-    - "**/*ecash*"
-  rules:
-    - type: "import"
-      statement: |
-        import {
-          Ecc,
-          P2PKHSignatory,
-          Script,
-          TxBuilder,
-          Tx,
-          Address,
-          fromHex,
-          toHex,
-          shaRmd160,
-          sha256,
-          hash256,
-          ALL_BIP143,
-          SINGLE_BIP143,
-          NONE_BIP143,
-        } from 'ecash-lib';
-    - type: "best-practice"
-      statement: |
-        // Use BIP143 signing (eCash recommended)
-        // ALL_BIP143 = SIGHASH_ALL | SIGHASH_BIP143
-    - type: "bigint"
-      statement: |
-        // Note: eCash uses bigint for satoshi amounts
-        // Use BigInt() literals: 1000n, 546n
-    - type: "error-handling"
-      statement: |
-        // Signing error handling
-        try {
-          const tx = txBuilder.sign({ feePerKb: 1000n, dustSats: 546n });
-        } catch (error) {
-          if (error.message.includes('Insufficient funds')) {
-            throw new Error('Insufficient balance to pay fee');
-          }
-          throw error;
-        }
-
-- name: "ecash-wallet"
-  description: "eCash HD wallet library"
-  files:
-    - "**/*wallet*"
-    - "**/*ecash*wallet*"
-  rules:
-    - type: "import"
-      statement: |
-        import { Wallet, WatchOnlyWallet } from 'ecash-wallet';
-        import { ChronikClient } from 'chronik-client';
-    - type: "initialization"
-      statement: |
-        // Wallet initialization flow
-        const chronik = new ChronikClient(['https://chronik.e.cash']);
-        const wallet = Wallet.fromMnemonic(mnemonic, chronik);
-        await wallet.sync(); // Sync UTXOs and balance
-    - type: "hd-wallet"
-      statement: |
-        // HD wallet configuration
-        const hdWallet = Wallet.fromMnemonic(mnemonic, chronik, {
-          hd: true,
-          accountNumber: 0,
-          receiveIndex: 0,
-          changeIndex: 0,
-        });
-    - type: "best-practice"
-      statement: |
-        // Never store private keys in frontend
-        // Use wallet signing instead of directly manipulating private keys
-        // Call wallet.sync() after each send to update UTXOs
-    - type: "balance"
-      statement: |
-        // Balance is BigInt
-        console.log(wallet.balanceSats); // 1000000n
-
-- name: "ecashaddrjs"
-  description: "eCash address format encoding/decoding"
-  files:
-    - "**/*address*"
-    - "**/utils/**/*.ts"
-    - "**/validation/**/*.ts"
-  rules:
-    - type: "import"
-      statement: |
-        import ecashaddr from 'ecashaddrjs';
-    - type: "best-practice"
-      statement: |
-        // Must validate type and hash after address decoding
-        const { prefix, type, hash } = ecashaddr.decode(address);
-        if (type !== 'P2PKH' && type !== 'P2SH') {
-          throw new Error('Unsupported address type');
-        }
-    - type: "validation"
-      statement: |
-        // Validation function template
-        function isValidEcashAddress(address: string): boolean {
-          try {
-            const { prefix } = ecashaddr.decode(address);
-            return prefix === 'ecash';
-          } catch {
-            return false;
-          }
-        }
-
-- name: "ecash-agora"
-  description: "eCash Agora decentralized trading protocol"
-  files:
-    - "**/*agora*"
-    - "**/*exchange*"
-    - "**/*marketplace*"
-  rules:
-    - type: "import"
-      statement: |
-        import { Agora, AgoraPartial, AgoraOneshot } from 'ecash-agora';
-        import { Wallet } from 'ecash-wallet';
-        import { ChronikClient } from 'chronik-client';
-    - type: "oneshot"
-      statement: |
-        // Oneshot for NFT - all or nothing
-        const oneshot = new AgoraOneshot({
-          enforcedOutputs: [...],
-          cancelPk: makerCancelPk,
-        });
-    - type: "partial"
-      statement: |
-        // Partial for fungible Tokens - can purchase partially
-        const partial = AgoraPartial.approximateParams({
-          offeredAtoms: amount,
-          priceNanoSatsPerAtom: price,
-          minAcceptedAtoms: minAmount,
-          tokenId,
-          tokenType,
-          tokenProtocol: 'SLP' | 'ALP',
-        });
-
-- name: "cashtab-connect"
-  description: "Cashtab browser extension wallet connection"
-  files:
-    - "**/*cashtab*"
-    - "**/*wallet*connect*"
-    - "**/dapp/**/*.ts"
-  rules:
-    - type: "import"
-      statement: |
-        import { CashtabConnect } from 'cashtab-connect';
-        import {
-          CashtabExtensionUnavailableError,
-          CashtabAddressDeniedError,
-          CashtabTransactionDeniedError,
-          CashtabTimeoutError,
-        } from 'cashtab-connect';
-    - type: "cleanup"
-      statement: |
-        // Cleanup on component unmount
-        useEffect(() => {
-          return () => cashtab.destroy();
-        }, []);
-
-- name: "mock-chronik-client"
-  description: "Chronik test mocking library"
-  files:
-    - "**/*.test.ts"
-    - "**/*.spec.ts"
-    - "**/__tests__/**"
-  rules:
-    - type: "import"
-      statement: |
-        import { MockChronikClient } from 'mock-chronik-client';
-    - type: "setup"
-      statement: |
-        // Setup mock before test
-        beforeEach(() => {
-          mockChronik = new MockChronikClient();
-          mockChronik.setChronikInfo({ version: '1.0.0' });
-          mockChronik.setBlockchainInfo({ tipHeight: 800000 });
-        });
-    - type: "teardown"
-      statement: |
-        // Cleanup after test
-        afterEach(() => {
-          mockChronik = null;
-        });
-
-- name: "bitcoin-abc"
-  description: "eCash full node and development framework"
-  files:
-    - "**/*bitcoin*abc*"
-    - "**/modules/**"
-    - "**/chronik/**"
-  rules:
-    - type: "cpp-style"
-      statement: |
-        # C++ Code Standards
-        - Indentation: 4 spaces (LLVM style)
-        - Functions: CamelCase
-        - Variables: lowerCamelCase
-        - Member variables: m_ prefix
-    - type: "testing"
-      statement: |
-        # Testing Requirements
-        - All new features must have unit tests
-        - Use describe/it style
-
-- name: "ecash-quicksend"
-  description: "Quick transaction sender for simple payments"
-  files:
-    - "**/*quicksend*"
-    - "**/*payment*"
-    - "**/simple/**/*.ts"
-  rules:
-    - type: "import"
-      statement: |
-        import { Quicksend } from 'ecash-quicksend';
-    - type: "note"
-      statement: |
-        // Note: ecash-quicksend is for simple payments and prototypes
-        // For large production projects, use ecash-wallet with ecash-lib
-        // Limited maintenance - not suitable for production-critical apps
-`
 
 export default function Home() {
   return (
@@ -403,59 +136,55 @@ export default function Home() {
           <TabsContent value="cursor" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Cursor .cursorrules Setup</CardTitle>
+                <CardTitle>Cursor Agent Skills</CardTitle>
                 <CardDescription>
-                  Add eCash development rules to your Cursor project
+                  Install eCash skills for Cursor via GitHub remote rule
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Option 1: Project-level Rules</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Create a .cursorrules file in your project root
-                  </p>
+                  <h3 className="text-sm font-medium">Install from GitHub</h3>
+                  <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                    <li>Open Cursor Settings (<code className="bg-muted px-1 rounded">Cmd+Shift+J</code>)</li>
+                    <li>Navigate to <strong>Rules</strong></li>
+                    <li>In Project Rules, click <strong>Add Rule → Remote Rule (Github)</strong></li>
+                    <li>Enter the repository URL below</li>
+                  </ol>
                   <CodeBlock
                     language="bash"
-                    code={"touch .cursorrules"}
+                    code={"https://github.com/alitayin/ecashskill"}
                   />
                 </div>
 
                 <Separator />
 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Option 2: Global Rules</h3>
-                  <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
-                    <li>Open Cursor Settings (Cmd/Ctrl + ,)</li>
-                    <li>Find the Rules option</li>
-                    <li>Add eCash development rules</li>
-                  </ol>
+                  <h3 className="text-sm font-medium">Or install manually</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Clone the repo and place the skills folder in your project:
+                  </p>
+                  <CodeBlock
+                    language="bash"
+                    code={"cp -r ecashskill/.agents/skills .agents/skills"}
+                  />
                 </div>
 
                 <Separator />
 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Full .cursorrules Configuration</h3>
+                  <h3 className="text-sm font-medium">Available Skills</h3>
                   <p className="text-sm text-muted-foreground">
-                    Copy the complete configuration below
+                    Cursor will auto-discover these skills from <code className="bg-muted px-1 rounded">.agents/skills/</code>:
                   </p>
-                  <Card>
-                    <CardContent className="p-0">
-                      <div className="relative">
-                        <pre className="p-4 text-sm overflow-y-auto h-96">
-                          <code>{cursorRulesFull}</code>
-                        </pre>
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="absolute top-2 right-2"
-                          onClick={() => navigator.clipboard.writeText(cursorRulesFull)}
-                        >
-                          <Copy className="w-4 h-4 mr-1" data-icon="inline-start" />
-                          Copy All
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                    <li><strong>ecash-core</strong> — XEC basics, address format, quick start</li>
+                    <li><strong>chronik</strong> — Blockchain indexer &amp; chronik-client</li>
+                    <li><strong>ecash-lib</strong> — Transaction building &amp; signing</li>
+                    <li><strong>ecash-wallet</strong> — HD wallet management</li>
+                    <li><strong>ecash-agora</strong> — Decentralized exchange protocol</li>
+                    <li><strong>cashtab</strong> — Web wallet &amp; browser extension</li>
+                    <li><strong>ecash-testing</strong> — Mock utilities for unit tests</li>
+                  </ul>
                 </div>
 
                 <Card>
@@ -464,7 +193,7 @@ export default function Home() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
-                      Cursor&apos;s .cursorrules supports YAML format, allowing precise control over AI behavior for different file types.
+                      Skills are auto-discovered by Cursor from <code className="bg-muted px-1 rounded">.agents/skills/</code> and applied automatically when relevant. You can also invoke any skill manually with <code className="bg-muted px-1 rounded">/skill-name</code> in Agent chat.
                     </p>
                   </CardContent>
                 </Card>
@@ -482,12 +211,12 @@ export default function Home() {
               <ul className="divide-y">
                 <li>
                   <a
-                    href="/skills/SKILL.md"
+                    href="/skills/ecash-core/SKILL.md"
                     className="flex items-center gap-3 p-4 hover:bg-muted transition-colors"
                   >
                     <File className="w-5 h-5 text-muted-foreground" />
-                    <span className="font-medium">SKILL.md</span>
-                    <span className="text-sm text-muted-foreground ml-auto">Main Skill file</span>
+                    <span className="font-medium">ecash-core/SKILL.md</span>
+                    <span className="text-sm text-muted-foreground ml-auto">Core skill</span>
                   </a>
                 </li>
                 <li>

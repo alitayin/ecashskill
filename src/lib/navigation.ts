@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 
-const skillsRoot = path.join(process.cwd(), "plugins/ecashskill/skills/ecashskill")
+const skillsRoot = path.join(process.cwd(), ".agents/skills")
 
 export interface FileItem {
   name: string
@@ -36,26 +36,12 @@ export function getDirectoryContents(relativePath: string = ""): FileItem[] {
 }
 
 export function getFileContent(relativePath: string): { content: string; data: any } | null {
-  // Handle both /skills/ecashskill/SKILL.md and SKILL.md paths
-  let fullPath = relativePath
+  const fullPath = path.join(skillsRoot, relativePath)
 
-  // If path doesn't start with ecashskill/, try adding it
-  if (!fullPath.startsWith("ecashskill")) {
-    fullPath = path.join(skillsRoot, relativePath)
-  } else {
-    fullPath = path.join(skillsRoot, relativePath.replace("skills/ecashskill/", ""))
-  }
-
-  // Also try the direct path
-  const directPath = path.join(skillsRoot, relativePath)
-  const tryPaths = [fullPath, directPath, path.join(skillsRoot, "ecashskill", relativePath)]
-
-  for (const tryPath of tryPaths) {
-    if (fs.existsSync(tryPath) && fs.statSync(tryPath).isFile()) {
-      const fileContents = fs.readFileSync(tryPath, "utf8")
-      const { data, content } = matter(fileContents)
-      return { content, data }
-    }
+  if (fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
+    const fileContents = fs.readFileSync(fullPath, "utf8")
+    const { data, content } = matter(fileContents)
+    return { content, data }
   }
 
   return null
@@ -63,7 +49,7 @@ export function getFileContent(relativePath: string): { content: string; data: a
 
 export function getBreadcrumbs(relativePath: string) {
   const parts = relativePath.split("/").filter(Boolean)
-  const breadcrumbs = [{ name: "ecashskill", path: "" }]
+  const breadcrumbs = [{ name: "skills", path: "" }]
 
   let currentPath = ""
   for (const part of parts) {
