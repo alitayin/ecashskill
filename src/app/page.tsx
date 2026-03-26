@@ -317,8 +317,7 @@ const cursorRulesFull = `# eCash Development Rules for Cursor
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
-      <AuroraBackground />
+    <AuroraBackground className="min-h-screen">
       <ParticleBackground />
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         <section className="text-center mb-16 space-y-4">
@@ -507,6 +506,6 @@ export default function Home() {
           </Card>
         </section>
       </main>
-    </div>
+    </AuroraBackground>
   )
 }

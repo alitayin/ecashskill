@@ -1,22 +1,26 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import React from "react"
 
-interface AuroraBackgroundProps {
-  className?: string
+interface AuroraBackgroundProps extends React.HTMLProps<HTMLDivElement> {
+  children?: React.ReactNode
   showRadialGradient?: boolean
 }
 
 export function AuroraBackground({
+  children,
   className,
   showRadialGradient = true,
+  ...props
 }: AuroraBackgroundProps) {
   return (
     <div
       className={cn(
-        "fixed inset-0 -z-20 pointer-events-none overflow-hidden",
+        "relative flex flex-col min-h-screen bg-zinc-50 dark:bg-zinc-900 transition-bg",
         className
       )}
+      {...props}
     >
       <div
         className={cn(
@@ -26,11 +30,13 @@ export function AuroraBackground({
         )}
         style={{
           backgroundImage:
-            "repeating-linear-gradient(100deg, #fff 0%, #fff 7%, transparent 10%, transparent 12%, #fff 16%), repeating-linear-gradient(100deg, #3b82f6 10%, #818cf8 15%, #60a5fa 20%, #c084fc 25%, #3b82f6 30%)",
+            "repeating-linear-gradient(100deg,#fff 0%,#fff 7%,transparent 10%,transparent 12%,#fff 16%)," +
+            "repeating-linear-gradient(100deg,#3b82f6 10%,#a5b4fc 15%,#93c5fd 20%,#ddd6fe 25%,#60a5fa 30%)",
           backgroundSize: "300%, 200%",
           backgroundPosition: "50% 50%, 50% 50%",
         }}
       />
+      {children}
     </div>
   )
 }

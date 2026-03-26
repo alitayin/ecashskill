@@ -136,6 +136,9 @@
   html {
     @apply font-sans;
   }
+  [data-slot="card"] {
+    @apply bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md;
+  }
 }
 
 /* Prose styles for markdown content */
