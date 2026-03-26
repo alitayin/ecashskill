@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
+import { ParticleBackground } from "@/components/ParticleBackground"
 
 function CodeBlock({ code, language }: { code: string; language: string }) {
   const [copied, setCopied] = useState(false)
@@ -311,10 +312,12 @@ const cursorRulesFull = `# eCash Development Rules for Cursor
         // Note: ecash-quicksend is for simple payments and prototypes
         // For large production projects, use ecash-wallet with ecash-lib
         // Limited maintenance - not suitable for production-critical apps
+`
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
+      <ParticleBackground />
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         <section className="text-center mb-16 space-y-4">
           <Badge variant="secondary" className="mb-4">v1.0.0</Badge>
@@ -363,7 +366,7 @@ export default function Home() {
                   <h3 className="text-sm font-medium">1. Add Plugin Marketplace</h3>
                   <CodeBlock
                     language="bash"
-                    code={`claude plugin marketplace add https://github.com/alitayin/ecashskill`}
+                    code={"claude plugin marketplace add https://github.com/alitayin/ecashskill"}
                   />
                 </div>
 
@@ -371,7 +374,7 @@ export default function Home() {
                   <h3 className="text-sm font-medium">2. Install Skill</h3>
                   <CodeBlock
                     language="bash"
-                    code={`claude plugin install ecashskill@ecashskill`}
+                    code={"claude plugin install ecashskill@ecashskill"}
                   />
                 </div>
 
@@ -379,7 +382,7 @@ export default function Home() {
                   <h3 className="text-sm font-medium">3. Verify Installation</h3>
                   <CodeBlock
                     language="bash"
-                    code={`claude plugin list`}
+                    code={"claude plugin list"}
                   />
                 </div>
               </CardContent>
@@ -413,7 +416,7 @@ export default function Home() {
                   </p>
                   <CodeBlock
                     language="bash"
-                    code={`touch .cursorrules`}
+                    code={"touch .cursorrules"}
                   />
                 </div>
 
