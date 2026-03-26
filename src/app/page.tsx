@@ -84,7 +84,7 @@ export default function Home() {
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="claude">Claude Code</TabsTrigger>
             <TabsTrigger value="cursor">Cursor</TabsTrigger>
-            <TabsTrigger value="others">OpenClaw &amp; 33 more</TabsTrigger>
+            <TabsTrigger value="others">OpenClaw &amp; 39 more</TabsTrigger>
           </TabsList>
 
           <TabsContent value="claude" className="space-y-6">
@@ -216,7 +216,7 @@ export default function Home() {
           <TabsContent value="others" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>OpenClaw &amp; 33 More Agents</CardTitle>
+                <CardTitle>OpenClaw &amp; 39 More Agents</CardTitle>
                 <CardDescription>
                   Install via the skills CLI — works with any Agent Skills compatible tool
                 </CardDescription>
@@ -225,7 +225,7 @@ export default function Home() {
                 <div className="space-y-2">
                   <h3 className="text-sm font-medium">Install with skills CLI</h3>
                   <p className="text-sm text-muted-foreground">
-                    The <code className="bg-muted px-1 rounded">npx skills</code> CLI automatically installs and configures skills for your agent. Works with OpenClaw, Windsurf, Copilot, and any other Agent Skills compatible tool.
+                    The <code className="bg-muted px-1 rounded">npx skills</code> CLI automatically installs and configures skills for your agent. Supports <a href="https://github.com/vercel-labs/skills?tab=readme-ov-file#available-agents" target="_blank" rel="noopener noreferrer" className="text-primary underline">OpenCode, Claude Code, Codex, Cursor, and 39 more</a>.
                   </p>
                   <CodeBlock
                     language="bash"
