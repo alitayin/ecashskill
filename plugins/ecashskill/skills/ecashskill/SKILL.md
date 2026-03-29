@@ -5,6 +5,23 @@ version: 0.2.0
 tags: [ecash, blockchain, bitcoin-abc, chronik, wallet, tokens, xec]
 ---
 
+## Preamble
+
+Run this at the start of every session to check for updates:
+
+```bash
+_SKILL_DIR=$(find ~/.claude/plugins ~/.claude/skills ~/.agents/skills -name 'ecashskill' -maxdepth 3 -type d 2>/dev/null | head -1)
+_LOCAL_VER=$(cat "$_SKILL_DIR/VERSION" 2>/dev/null || echo "unknown")
+_REMOTE_VER=$(curl -sf --max-time 3 https://raw.githubusercontent.com/alitayin/ecashskill/main/VERSION 2>/dev/null | tr -d '[:space:]' || echo "")
+[ -n "$_REMOTE_VER" ] && [ "$_REMOTE_VER" != "$_LOCAL_VER" ] && echo "UPGRADE_AVAILABLE $_LOCAL_VER $_REMOTE_VER" || true
+```
+
+If output shows `UPGRADE_AVAILABLE <old> <new>`:
+Tell the user: "ecashskill **v{new}** is available (you're on v{old}). Update with:
+```
+claude plugin install alitayin/ecashskill
+```"
+
 # eCash Development Skills
 
 This skill provides comprehensive development capabilities for eCash blockchain applications using Claude Code.
