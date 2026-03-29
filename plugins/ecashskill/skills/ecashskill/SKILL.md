@@ -1,7 +1,7 @@
 ---
 name: ecash
 description: Comprehensive eCash blockchain development skills for Claude Code
-version: 1.0.0
+version: 0.2.0
 tags: [ecash, blockchain, bitcoin-abc, chronik, wallet, tokens, xec]
 ---
 
@@ -36,6 +36,7 @@ The `references/` folder contains documentation for different tools and librarie
 | `ecash-quicksend.md` | Quick transaction sending | Simple payments, prototypes, small projects |
 | `cashtab.md` | Web wallet reference | Reference implementation, wallet UI patterns |
 | `cashtab-connect.md` | Browser extension integration | DApp wallet connection |
+| `paybutton.md` | Embeddable payment button | Accepting eCash on websites, donations, e-commerce |
 | `bitcoin-abc.md` | Node implementation | Contributing to Bitcoin ABC, understanding internals |
 | `mock-chronik-client.md` | Testing utilities | Writing unit tests |
 | `examples.md` | Code examples | Quick reference for common patterns |
@@ -48,6 +49,7 @@ Use this skill when:
 - Creating or managing eCash wallets
 - Working with SLP/ALP Tokens
 - Developing payment solutions
+- Adding a PayButton payment widget to a website
 - Analyzing blockchain data
 
 ## Tools & Libraries
@@ -71,6 +73,7 @@ Use this skill when:
 - **cashtab** - Web wallet reference (see `references/cashtab.md`)
 - **cashtab-connect** - Browser extension integration (see `references/cashtab-connect.md`)
 - **ecash-agora** - Marketplace application (see `references/ecash-agora.md`)
+- **paybutton** - Embeddable payment button for websites (see `references/paybutton.md`)
 
 ### Testing
 - **mock-chronik-client** - Mock for testing (see `references/mock-chronik-client.md`)
