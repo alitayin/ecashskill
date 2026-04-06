@@ -1,7 +1,7 @@
 ---
 name: ecash
 description: Comprehensive eCash blockchain development skills for Claude Code
-version: 0.2.0
+version: 0.3.0
 tags: [ecash, blockchain, bitcoin-abc, chronik, wallet, tokens, xec]
 ---
 
