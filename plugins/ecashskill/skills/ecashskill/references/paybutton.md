@@ -1,7 +1,7 @@
 ---
 name: paybutton
 description: Embeddable payment button for accepting eCash on websites
-version: 1.0.0
+version: 5.4.0
 tags: [ecash, payment, button, widget, web, react, ecommerce]
 ---
 
@@ -65,6 +65,15 @@ Renders an inline payment form without requiring a button click.
 <script src="https://unpkg.com/@paybutton/paybutton/dist/paybutton.js"></script>
 <div class="paybutton-widget" to="ecash:qrmm7ed0px8tydrlhgvu3putwpwzlfyr0uzfc0slxp"></div>
 ```
+
+## Choosing Button vs Widget
+
+| UI | Use When | Notes |
+|----|----------|-------|
+| Button | Checkout, donations, or compact calls to action | Opens payment dialog on click |
+| Widget | Persistent payment panel or invoice page | Renders the payment form inline |
+| React package | React apps with component lifecycle control | Prefer callbacks over DOM event scraping |
+| Vanilla package | Static pages or non-React apps | Keep script loading explicit |
 
 ## Callbacks
 
@@ -173,3 +182,5 @@ op-return="item1|item2|item3"
 - `contribution-offset` is capped at `goal-amount`; negative values subtract from the displayed total
 - `ws-base-url` and `api-base-url` are only needed when self-hosting the PayButton backend
 - The Widget (`paybutton-widget`) renders inline; the `text` parameter has no effect on it
+- Treat callbacks as payment signals, then verify server-side for fulfillment flows
+- Use a unique payment id or randomized satoshis when multiple payments can use the same address and amount

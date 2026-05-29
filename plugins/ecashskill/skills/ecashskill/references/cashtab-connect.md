@@ -40,8 +40,19 @@ import {
 } from 'cashtab-connect';
 ```
 
+Handle each error as a user-facing state. Extension unavailable means installation
+or browser support is missing; denied errors mean the user intentionally rejected
+the request and should not be retried automatically.
+
 ## Cleanup
 
 ```typescript
 cashtab.destroy(); // Call on component unmount
 ```
+
+## Integration Checklist
+
+- Wait for extension availability before showing send actions as enabled.
+- Validate destination addresses before calling `sendXec` or `sendToken`.
+- Treat returned transaction ids as pending until Chronik confirms or finalizes them.
+- Destroy listeners when the page, modal, or component unmounts.

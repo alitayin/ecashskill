@@ -1,70 +1,76 @@
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { ArrowRight } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { referenceCards } from "@/lib/site-content"
 
-const guides = [
+const guideGroups = [
   {
-    slug: "quickstart",
-    title: "快速入门",
-    description: "5分钟搭建你的第一个 eCash AI 应用",
-    difficulty: "入门",
+    title: "Start with Chronik",
+    description: "Query UTXOs, broadcast transactions, and subscribe to chain events.",
+    href: "/skills/references/chronik-client.md",
+    level: "Core",
   },
   {
-    slug: "wallet-integration",
-    title: "钱包集成指南",
-    description: "详细讲解如何集成 eCash 钱包",
-    difficulty: "进阶",
+    title: "Build and sign transactions",
+    description: "Use ecash-lib and wallet references for deterministic XEC and token flows.",
+    href: "/skills/references/ecash-lib.md",
+    level: "Core",
   },
   {
-    slug: "advanced-agent",
-    title: "高级 Agent 开发",
-    description: "构建复杂的 eCash 交互逻辑",
-    difficulty: "高级",
+    title: "Integrate payments",
+    description: "Choose PayButton, quicksend, Cashtab Connect, or a wallet-backed custom flow.",
+    href: "/reference",
+    level: "App",
   },
-]
+] as const
 
 export default function GuidesPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Guides</h1>
-        <p className="text-muted-foreground">
-          从入门到进阶的完整教程
-        </p>
+    <main className="container mx-auto flex max-w-5xl flex-col gap-8 px-4 py-12">
+      <div className="flex flex-col gap-3">
+        <Badge variant="secondary" className="w-fit">
+          Guides
+        </Badge>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-semibold tracking-tight">Workflow-oriented reading paths</h1>
+          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+            These paths point to maintained reference pages instead of stale placeholder tutorials.
+          </p>
+        </div>
       </div>
 
-      <div className="space-y-4 max-w-2xl">
-        {guides.map((guide) => (
-          <Card key={guide.slug} className="hover:border-primary transition-colors">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>{guide.title}</CardTitle>
-                <CardDescription>{guide.description}</CardDescription>
-              </div>
-              <Badge
-                variant={
-                  guide.difficulty === "入门"
-                    ? "secondary"
-                    : guide.difficulty === "进阶"
-                    ? "default"
-                    : "destructive"
-                }
-              >
-                {guide.difficulty}
+      <div className="grid gap-4 md:grid-cols-3">
+        {guideGroups.map((guide) => (
+          <Card key={guide.href}>
+            <CardHeader>
+              <Badge variant="outline" className="w-fit">
+                {guide.level}
               </Badge>
+              <CardTitle>{guide.title}</CardTitle>
+              <CardDescription>{guide.description}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Link
-                href={`/guides/${guide.slug}`}
-                className="inline-flex items-center text-sm text-primary hover:underline transition-colors"
-              >
-                开始阅读 <ArrowRight className="w-4 h-4 ml-1" />
+              <Link href={guide.href} className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+                Read path
+                <ArrowRight data-icon="inline-end" />
               </Link>
             </CardContent>
           </Card>
         ))}
       </div>
-    </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        {referenceCards.slice(0, 4).map((ref) => (
+          <Link key={ref.href} href={ref.href} className="rounded-lg border bg-card p-4 transition-colors hover:bg-muted/40">
+            <span className="flex items-center justify-between gap-3">
+              <span className="font-medium">{ref.title}</span>
+              <ref.icon className="text-muted-foreground" />
+            </span>
+            <span className="mt-2 block text-sm leading-6 text-muted-foreground">{ref.description}</span>
+          </Link>
+        ))}
+      </div>
+    </main>
   )
 }

@@ -1,7 +1,7 @@
 ---
 name: ecash
 description: Comprehensive eCash blockchain development skills for Claude Code
-version: 0.3.0
+version: 0.4.0
 tags: [ecash, blockchain, bitcoin-abc, chronik, wallet, tokens, xec]
 ---
 
@@ -24,7 +24,7 @@ claude plugin install alitayin/ecashskill
 
 # eCash Development Skills
 
-This skill provides comprehensive development capabilities for eCash blockchain applications using Claude Code.
+This skill provides comprehensive development capabilities for eCash blockchain applications using AI coding agents.
 
 ## What is eCash?
 
@@ -58,6 +58,30 @@ The `references/` folder contains documentation for different tools and librarie
 | `mock-chronik-client.md` | Testing utilities | Writing unit tests |
 | `examples.md` | Code examples | Quick reference for common patterns |
 
+## Library Selection
+
+Use this decision table before writing code:
+
+| Task | Recommended tool | Notes |
+|------|------------------|-------|
+| Query chain state | `chronik-client` | Prefer explicit Chronik endpoint arrays and retry around network boundaries |
+| Build custom transactions | `ecash-lib` | Keep amounts as `bigint` satoshis and test serialization with fixtures |
+| Manage mnemonic wallets | `ecash-wallet` | Use BIP44 coin type `1899` unless matching another wallet's existing path |
+| Add a simple payment button | `@paybutton/react` or `@paybutton/paybutton` | Best for website checkout, donations, and hosted UI flows |
+| Send XEC/tokens in scripts | `ecash-quicksend` | Useful for prototypes and internal scripts; avoid for critical wallet products |
+| Integrate a browser wallet | `cashtab-connect` | Handle user denial, unavailable extension, and timeout errors explicitly |
+| Trade tokens | `ecash-agora` | Understand atom units and covenant signing before accepting or listing offers |
+
+## Coding Rules
+
+- Treat XEC amounts carefully: `1 XEC = 100 satoshis`; library APIs often expect satoshis or token atoms, not decimal XEC.
+- Prefer `bigint` for satoshis and token atoms. Convert display strings at UI boundaries only.
+- Validate eCash addresses with `ecashaddrjs` before sending funds.
+- Never log mnemonics, private keys, raw seed material, or signed transactions containing sensitive metadata.
+- Use `chronik-client` or a mocked Chronik client in tests. Do not make unit tests depend on public Chronik availability.
+- When using WebSockets, include reconnect handling and unsubscribe/close during cleanup.
+- For tokens, identify both protocol (`SLP` or `ALP`) and token type before constructing sends or offers.
+
 ## When to Use
 
 Use this skill when:
@@ -72,7 +96,7 @@ Use this skill when:
 ## Tools & Libraries
 
 ### Infrastructure
-- **chronik** - High-performance blockchain indexer (see `references/chronik.md`)
+- **chronik** - High-performance blockchain indexer (see `references/chronik/chronik.md`)
 - **chronik-client** - Client library for Chronik (see `references/chronik-client.md`)
 - **bitcoin-abc** - Node implementation (see `references/bitcoin-abc.md`)
 
@@ -95,6 +119,14 @@ Use this skill when:
 ### Testing
 - **mock-chronik-client** - Mock for testing (see `references/mock-chronik-client.md`)
 
+## Testing Strategy
+
+- Use `mock-chronik-client` for address, token, UTXO, and transaction scenarios.
+- Store transaction fixtures as hex strings with expected txids and decoded outputs.
+- Test dust, insufficient funds, invalid address, token mismatch, and Chronik error branches.
+- Keep integration tests opt-in when they touch public Chronik endpoints.
+- For UI apps, cover wallet-denied, extension-missing, pending-payment, and payment-success states.
+
 ## Quick Start
 
 ```typescript
@@ -103,6 +135,12 @@ const chronik = new ChronikClient(['https://chronik.e.cash/']);
 ```
 
 For more available Chronik nodes, see [https://chronik.cash](https://chronik.cash).
+
+## Version 0.4.0 Notes
+
+- Refreshed reference package versions for Chronik, ecash-lib, ecash-wallet, Agora, quicksend, mock-chronik-client, and PayButton.
+- Added stronger documentation around library choice, unit handling, secrets, and test boundaries.
+- Added frontmatter consistency expectations for all reference markdown files.
 
 ## Prompt Templates
 

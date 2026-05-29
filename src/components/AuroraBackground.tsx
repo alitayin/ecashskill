@@ -28,7 +28,7 @@ export function AuroraBackground({
         style={{
           backgroundImage:
             "repeating-linear-gradient(100deg,#fff 0%,#fff 7%,transparent 10%,transparent 12%,#fff 16%)," +
-            "repeating-linear-gradient(100deg,#3b82f6 10%,#a5b4fc 15%,#93c5fd 20%,#ddd6fe 25%,#60a5fa 30%)",
+            "repeating-linear-gradient(100deg,#14b8a6 10%,#fde68a 15%,#7dd3fc 20%,#f9a8d4 25%,#86efac 30%)",
           backgroundSize: "300%, 200%",
           backgroundPosition: "50% 50%, 50% 50%",
         }}

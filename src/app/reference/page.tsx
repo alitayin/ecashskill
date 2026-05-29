@@ -1,51 +1,45 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-
-const references = [
-  {
-    title: "API 速查表",
-    description: "eCash API 常用方法快速参考",
-    category: "API",
-  },
-  {
-    title: "开发资源链接",
-    description: "有用的外部开发资源和文档",
-    category: "Resources",
-  },
-  {
-    title: "错误码说明",
-    description: "常见错误码及解决方案",
-    category: "Debug",
-  },
-]
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { referenceCards } from "@/lib/site-content"
 
 export default function ReferencePage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Reference</h1>
-        <p className="text-muted-foreground">
-          API 速查表与开发资源
-        </p>
+    <main className="container mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12">
+      <div className="flex flex-col gap-3">
+        <Badge variant="secondary" className="w-fit">
+          Reference
+        </Badge>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-semibold tracking-tight">eCash reference map</h1>
+          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+            Fast entry points into the maintained skill references. Each page is optimized
+            for agent work: install hints, common methods, unit conventions, and pitfalls.
+          </p>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 max-w-4xl">
-        {references.map((ref) => (
-          <Card key={ref.title}>
+      <div className="grid gap-4 md:grid-cols-2">
+        {referenceCards.map((ref) => (
+          <Card key={ref.href} className="transition-colors hover:bg-muted/40">
             <CardHeader>
-              <div className="flex items-center justify-between mb-2">
+              <div className="mb-2 flex items-center justify-between gap-3">
                 <Badge variant="outline">{ref.category}</Badge>
+                <ref.icon className="text-muted-foreground" />
               </div>
               <CardTitle>{ref.title}</CardTitle>
               <CardDescription>{ref.description}</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">即将推出...</p>
+              <Link href={ref.href} className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+                Open reference
+                <ArrowRight data-icon="inline-end" />
+              </Link>
             </CardContent>
           </Card>
         ))}
       </div>
-    </div>
+    </main>
   )
 }

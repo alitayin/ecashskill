@@ -1,3 +1,10 @@
+---
+name: examples
+description: Practical Chronik, transaction, and debugging snippets for eCash development
+version: 1.0.0
+tags: [examples, chronik, websocket, debugging, snippets]
+---
+
 # Chronik Code Examples
 
 ## Transaction Monitor
@@ -43,9 +50,33 @@ console.log('Tip height:', chainInfo.tipHeight);
 // 3. Check transaction
 try {
   const tx = await chronik.tx(txid);
-} catch (e) {
-  if (e.message.includes('Not Found')) {
+} catch (err) {
+  const message = err instanceof Error ? err.message : String(err);
+  if (message.includes('Not Found')) {
     console.log('Tx not indexed');
   }
+}
+```
+
+## Address Validation Before Send
+
+```typescript
+import ecashaddr from 'ecashaddrjs';
+
+function assertEcashAddress(address: string) {
+  const { prefix } = ecashaddr.decode(address);
+  if (prefix !== 'ecash') {
+    throw new Error(`Expected ecash mainnet address, got ${prefix}`);
+  }
+}
+```
+
+## Unit Conversion Boundary
+
+```typescript
+function xecToSats(input: string) {
+  const [whole, fraction = ''] = input.split('.');
+  const cents = `${whole}${fraction.padEnd(2, '0').slice(0, 2)}`;
+  return BigInt(cents);
 }
 ```

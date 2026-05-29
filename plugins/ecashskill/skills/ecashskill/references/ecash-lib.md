@@ -1,7 +1,7 @@
 ---
 name: ecash-lib
 description: Bitcoin ABC official library for building and signing eCash transactions
-version: 4.11.0
+version: 4.12.0
 tags: [ecash-lib, transaction, signing, script, crypto]
 ---
 
@@ -46,6 +46,17 @@ const tx = txBuild.sign({ feePerKb: 1000n, dustSats: 546n });
 const rawTx = tx.ser();
 ```
 
+## Unit Rules
+
+```typescript
+const sats = 1_000n; // 10 XEC
+const feePerKb = 1_000n;
+const dustSats = 546n;
+```
+
+Keep transaction math in satoshis as `bigint`. Convert decimal XEC strings only at
+the UI/API boundary, then store and sign with integer satoshi values.
+
 ## Script Creation
 
 ```typescript
@@ -84,3 +95,6 @@ const script = Script.fromAddress('ecash:q...');
 - Use **BigInt** for amounts (1000n satoshis)
 - Use **ALL_BIP143** signing (eCash recommended)
 - Use `toHex()` to convert bytecode to string
+- Build tests from known UTXO fixtures and assert output scripts, fee, change, and txid
+- Reject dust outputs before signing so UI errors are clearer than broadcast failures
+- Separate transaction construction from Chronik broadcast calls for easier tests

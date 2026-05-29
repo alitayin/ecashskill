@@ -2,6 +2,46 @@
 
 import { useEffect, useRef } from "react"
 
+const PARTICLE_COLORS = [
+  "rgba(52, 211, 153, 0.35)",
+  "rgba(250, 204, 21, 0.3)",
+  "rgba(56, 189, 248, 0.28)",
+  "rgba(244, 114, 182, 0.25)",
+]
+
+class Particle {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  size: number
+  color: string
+
+  constructor(canvasWidth: number, canvasHeight: number) {
+    this.x = Math.random() * canvasWidth
+    this.y = Math.random() * canvasHeight
+    this.vx = (Math.random() - 0.5) * 0.5
+    this.vy = (Math.random() - 0.5) * 0.5
+    this.size = Math.random() * 2 + 1
+    this.color = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)]
+  }
+
+  update(width: number, height: number) {
+    this.x += this.vx
+    this.y += this.vy
+
+    if (this.x < 0 || this.x > width) this.vx *= -1
+    if (this.y < 0 || this.y > height) this.vy *= -1
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.beginPath()
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+    ctx.fillStyle = this.color
+    ctx.fill()
+  }
+}
+
 export function ParticleBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -15,49 +55,6 @@ export function ParticleBackground() {
     let animationId: number
     const particles: Particle[] = []
     const particleCount = 80
-
-    class Particle {
-      x: number
-      y: number
-      vx: number
-      vy: number
-      size: number
-      color: string
-
-      constructor(canvasWidth: number, canvasHeight: number) {
-        this.x = Math.random() * canvasWidth
-        this.y = Math.random() * canvasHeight
-        this.vx = (Math.random() - 0.5) * 0.5
-        this.vy = (Math.random() - 0.5) * 0.5
-        this.size = Math.random() * 2 + 1
-        this.color = this.getRandomColor()
-      }
-
-      getRandomColor() {
-        const colors = [
-          "rgba(99, 102, 241, 0.4)", // indigo
-          "rgba(168, 85, 247, 0.4)", // purple
-          "rgba(59, 130, 246, 0.3)", // blue
-          "rgba(236, 72, 153, 0.3)", // pink
-        ]
-        return colors[Math.floor(Math.random() * colors.length)]
-      }
-
-      update(width: number, height: number) {
-        this.x += this.vx
-        this.y += this.vy
-
-        if (this.x < 0 || this.x > width) this.vx *= -1
-        if (this.y < 0 || this.y > height) this.vy *= -1
-      }
-
-      draw(ctx: CanvasRenderingContext2D) {
-        ctx.beginPath()
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
-        ctx.fillStyle = this.color
-        ctx.fill()
-      }
-    }
 
     function resize() {
       if (!canvas) return
@@ -89,7 +86,7 @@ export function ParticleBackground() {
             ctx.beginPath()
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.15 * (1 - distance / 150)})`
+            ctx.strokeStyle = `rgba(20, 184, 166, ${0.12 * (1 - distance / 150)})`
             ctx.lineWidth = 0.5
             ctx.stroke()
           }

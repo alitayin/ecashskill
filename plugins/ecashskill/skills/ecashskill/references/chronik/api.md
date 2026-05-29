@@ -1,3 +1,10 @@
+---
+name: chronik-api
+description: HTTP and WebSocket endpoint reference for the Chronik eCash indexer API
+version: 1.0.0
+tags: [chronik, api, websocket, http, tokens]
+---
+
 # Chronik API Reference
 
 ## HTTP Endpoints
@@ -39,3 +46,16 @@ ALP_TOKEN_TYPE_STANDARD = 0
 
 - `https://chronik.e.cash`
 - `http://localhost:8331` (local Bitcoin ABC)
+
+## Query Patterns
+
+- Use `/script/:type/:payload/utxos` for spendable state.
+- Use `/script/:type/:payload/history` for paginated address activity.
+- Use `/token/:txid` before constructing SLP or ALP token operations.
+- Use WebSocket subscriptions for UX freshness, but confirm final state with HTTP queries.
+
+## Broadcast Safety
+
+If a broadcast request times out, do not assume it failed. Reconstruct or derive the
+transaction id, query `/tx/:txid`, and only rebroadcast after you know the network
+did not accept it.

@@ -1,7 +1,7 @@
 ---
 name: ecash-agora
 description: Non-custodial exchange (NEX) protocol for eCash tokens
-version: 4.0.0
+version: 4.2.0
 tags: [agora, dex, exchange, token, marketplace, covenant]
 ---
 
@@ -74,3 +74,11 @@ await partial.list({ wallet: sellerWallet });
 ## Price Unit
 
 Price is in **nano sats per atom**: `1 sats = 1,000,000,000 nano sats`
+
+## Safety Checklist
+
+- Confirm token protocol and type before creating an offer.
+- Display human token decimals in the UI, but pass atoms to Agora methods.
+- Preview `askedSats(acceptedAtoms)` before signing an accept transaction.
+- Test cancel flows with a mock Chronik client before using a funded wallet.
+- Keep seller and buyer signing keys separate in fixtures and production code.

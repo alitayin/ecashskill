@@ -1,8 +1,8 @@
 import fs from "fs"
 import path from "path"
-import matter from "gray-matter"
+import matter, { type GrayMatterFile } from "gray-matter"
 
-const skillsRoot = path.join(process.cwd(), "plugins/ecashskill/skills/ecashskill")
+const skillsRoot = path.join(/*turbopackIgnore: true*/ process.cwd(), "plugins/ecashskill/skills/ecashskill")
 
 export interface FileItem {
   name: string
@@ -10,22 +10,53 @@ export interface FileItem {
   path: string
 }
 
+export interface FileContent {
+  content: string
+  data: GrayMatterFile<string>["data"]
+}
+
+export interface Breadcrumb {
+  name: string
+  path: string
+}
+
+function normalizeSkillPath(relativePath: string = "") {
+  const normalized = path
+    .normalize(relativePath)
+    .replace(/\\/g, "/")
+    .replace(/^(\.\.(\/|$))+/, "")
+
+  return normalized === "." ? "" : normalized.replace(/^\/+/, "")
+}
+
+function resolveSkillPath(relativePath: string = "") {
+  const safePath = normalizeSkillPath(relativePath)
+  const fullPath = path.resolve(skillsRoot, safePath)
+  const rootWithSeparator = `${skillsRoot}${path.sep}`
+
+  if (fullPath !== skillsRoot && !fullPath.startsWith(rootWithSeparator)) {
+    return null
+  }
+
+  return { fullPath, safePath }
+}
+
 export function getDirectoryContents(relativePath: string = ""): FileItem[] {
-  const fullPath = path.join(skillsRoot, relativePath)
-  if (!fs.existsSync(fullPath)) {
+  const resolved = resolveSkillPath(relativePath)
+  if (!resolved || !fs.existsSync(resolved.fullPath) || !fs.statSync(resolved.fullPath).isDirectory()) {
     return []
   }
 
-  const items = fs.readdirSync(fullPath)
+  const items = fs.readdirSync(resolved.fullPath)
   return items
     .filter(name => !name.startsWith("."))
     .map(name => {
-      const itemPath = path.join(fullPath, name)
+      const itemPath = path.join(resolved.fullPath, name)
       const stat = fs.statSync(itemPath)
       return {
         name,
         type: (stat.isDirectory() ? "directory" : "file") as "file" | "directory",
-        path: relativePath ? `${relativePath}/${name}` : name,
+        path: resolved.safePath ? `${resolved.safePath}/${name}` : name,
       }
     })
     .sort((a, b) => {
@@ -35,11 +66,14 @@ export function getDirectoryContents(relativePath: string = ""): FileItem[] {
     })
 }
 
-export function getFileContent(relativePath: string): { content: string; data: any } | null {
-  const fullPath = path.join(skillsRoot, relativePath)
+export function getFileContent(relativePath: string): FileContent | null {
+  const resolved = resolveSkillPath(relativePath)
+  if (!resolved) {
+    return null
+  }
 
-  if (fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
-    const fileContents = fs.readFileSync(fullPath, "utf8")
+  if (fs.existsSync(resolved.fullPath) && fs.statSync(resolved.fullPath).isFile()) {
+    const fileContents = fs.readFileSync(resolved.fullPath, "utf8")
     const { data, content } = matter(fileContents)
     return { content, data }
   }
@@ -47,9 +81,9 @@ export function getFileContent(relativePath: string): { content: string; data: a
   return null
 }
 
-export function getBreadcrumbs(relativePath: string) {
-  const parts = relativePath.split("/").filter(Boolean)
-  const breadcrumbs = [{ name: "skills", path: "" }]
+export function getBreadcrumbs(relativePath: string): Breadcrumb[] {
+  const parts = normalizeSkillPath(relativePath).split("/").filter(Boolean)
+  const breadcrumbs: Breadcrumb[] = [{ name: "skills", path: "" }]
 
   let currentPath = ""
   for (const part of parts) {

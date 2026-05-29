@@ -54,3 +54,10 @@ function isValidEcashAddress(address: string): boolean {
 | ecash | eCash mainnet |
 | ectest | eCash testnet |
 | bitcoincash | Bitcoin Cash |
+
+## Pitfalls
+
+- Reject mixed-prefix inputs before sending funds.
+- Preserve address type (`P2PKH` or `P2SH`) when re-encoding.
+- Do not accept legacy BCH prefixes in eCash-only payment flows unless conversion is an explicit feature.
+- Keep validation separate from balance checks so form errors stay precise.

@@ -1,7 +1,7 @@
 ---
 name: ecash-wallet
 description: HD wallet library for eCash with XEC and token support
-version: 5.1.0
+version: 5.5.0
 tags: [wallet, hd, bip44, tokens, utxo]
 ---
 
@@ -42,6 +42,10 @@ await hdWallet.sync();
 const receiveAddr = hdWallet.getNextReceiveAddress();
 hdWallet.incrementReceiveIndex();
 ```
+
+Persist the receive/change indexes after each issued address. If the app can run
+on multiple devices, coordinate index updates server-side or rescan a safe gap
+limit before showing balances.
 
 ## Watch-Only Wallet
 
@@ -90,3 +94,11 @@ await action.build();
 await action.sign();
 await action.broadcast();
 ```
+
+## Production Checklist
+
+- Encrypt mnemonics at rest and avoid keeping them in long-lived browser state.
+- Re-sync before sending if UTXOs may have changed in another tab or device.
+- Show balances in XEC, but send satoshis as `bigint`.
+- Test with watch-only wallets for read flows and mnemonic wallets only for signing flows.
+- Handle Chronik downtime separately from insufficient funds or invalid address errors.

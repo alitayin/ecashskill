@@ -1,7 +1,7 @@
 ---
 name: chronik-client
 description: JavaScript/TypeScript client for Chronik Indexer API
-version: 4.1.0
+version: 4.3.0
 tags: [chronik, blockchain, indexer, websocket, api]
 ---
 
@@ -39,6 +39,18 @@ const token = await chronik.token('token_id');
 const block = await chronik.block(800000);
 ```
 
+## Recommended Client Setup
+
+```typescript
+const chronik = new ChronikClient([
+  'https://chronik.e.cash/',
+  'https://chronik.be.cash/',
+]);
+```
+
+Use more than one endpoint for user-facing apps. Keep endpoint configuration outside
+business logic so tests can pass a `MockChronikClient` or a local Chronik instance.
+
 ## Broadcasting
 
 ```typescript
@@ -59,6 +71,13 @@ await ws.waitForOpen();
 ws.subscribeToBlocks();
 ws.subscribeToAddress('ecash:q...');
 ws.subscribeToTokenId('token_id');
+```
+
+Always close WebSockets when a component, worker, or script shuts down:
+
+```typescript
+ws.unsubscribeFromAddress('ecash:q...');
+ws.close();
 ```
 
 ## API Reference
@@ -86,3 +105,10 @@ ws.subscribeToTokenId('token_id');
 
 - **ALP** (Airdrop Lottery Protocol)
 - **SLP** (Simple Ledger Protocol) - including NFT1
+
+## Error Handling
+
+- Treat `Not Found` responses as expected for unknown txids, token ids, or blocks.
+- Retry transient network failures outside the Chronik client boundary.
+- Do not retry `broadcastTx` blindly after an ambiguous network failure; first query by txid if you can derive it from the raw transaction.
+- Keep pagination explicit. Use bounded page sizes for address or token history scans.

@@ -1,7 +1,7 @@
 ---
 name: mock-chronik-client
 description: Testing utility that mocks Chronik indexer client for unit tests
-version: 3.1.1
+version: 3.4.0
 tags: [testing, mock, chronik, unit-test, websocket]
 ---
 
@@ -55,6 +55,16 @@ try {
 | `setUtxosByAddress(addr, utxos)` | Set address UTXOs |
 | `setToken(tokenId, token)` | Set Token info |
 
+## What to Mock
+
+| Scenario | Fixture |
+|----------|---------|
+| Spend XEC | Address UTXOs with enough sats and matching output scripts |
+| Insufficient funds | Empty UTXO set or UTXOs below send amount plus fee |
+| Token send | Token UTXOs plus token metadata |
+| Broadcast error | `broadcastTx` rejection or duplicate transaction response |
+| Missing transaction | `setTx(txid, new Error('Not found'))` |
+
 ## Best Practices
 
 ```typescript
@@ -68,3 +78,6 @@ afterEach(() => {
   mockChronik = null;
 });
 ```
+
+Keep mock state local to each test. Shared mock clients make transaction-order bugs
+hard to diagnose and can hide missing sync calls.

@@ -1,7 +1,7 @@
 ---
 name: ecash-quicksend
 description: Unified transaction manager for eCash XEC, SLP, and ALP tokens with Agora DEX support
-version: 2.0.2
+version: 2.3.0
 tags: [ecash, transaction, quicksend, xec, tokens, payment, agora, dex]
 ---
 
@@ -142,13 +142,20 @@ await cancelAgoraOffer(myOffers[0], {
 | `feeStrategy` | `FeeStrategy` | Fee selection strategy | `all` |
 | `tokenStrategy` | `TokenStrategy` | Token selection strategy | `all` |
 
-## Key Changes in v2.0
+## Key Changes Since v2.0
 
 - **Unified SLP/ALP handling**: Protocol auto-detection from UTXO data
 - **SLP support on Agora**: Can now list and trade SLP tokens on Agora DEX
 - **Mnemonic-based**: Uses HD wallet with mnemonic instead of private key
 - **Function-based API**: Replaced class-based API with standalone functions
 - **All amounts in BigInt atoms**: Consistent unit handling across all methods
+
+## Testing Notes
+
+- Pass a custom Chronik client in `options.chronik` for deterministic tests.
+- Keep mnemonic-based tests on throwaway fixtures only.
+- Assert returned txids and raw transaction hex when the helper exposes them.
+- Cover invalid address, missing mnemonic, insufficient XEC, and token balance mismatch paths.
 
 ## Limitations
 

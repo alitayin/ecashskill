@@ -1,129 +1,127 @@
-import { notFound } from "next/navigation"
-import Link from "next/link"
-import { File, Folder, Download, ChevronRight } from "lucide-react"
-import { getDirectoryContents, getFileContent, getBreadcrumbs } from "@/lib/navigation"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import { marked } from "marked"
+import Link from "next/link"
+import { notFound } from "next/navigation"
+import { ChevronRight, Download, File, Folder } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { getBreadcrumbs, getDirectoryContents, getFileContent } from "@/lib/navigation"
 
 interface PageProps {
   params: Promise<{ path?: string[] }>
 }
 
-export default async function SkillsPage({ params }: PageProps) {
-  const { path } = await params
-  const relativePath = path ? path.join("/") : ""
+function isFilePath(relativePath: string) {
+  return relativePath.endsWith(".md") || relativePath.includes(".")
+}
 
-  // If it's a file, show content
-  if (relativePath && (relativePath.endsWith(".md") || relativePath.includes("."))) {
-    const file = getFileContent(relativePath)
-    if (!file) return notFound()
-
-    const filename = relativePath.split("/").pop() || ""
-    const breadcrumbs = getBreadcrumbs(relativePath.slice(0, relativePath.lastIndexOf("/")))
-
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="border-b bg-card">
-          <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-                <Link href="/skills" className="hover:text-foreground transition-colors">skills</Link>
-                {breadcrumbs.slice(1).map((crumb) => (
-                  <span key={crumb.path} className="flex items-center">
-                    <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
-                    <span className="font-medium text-foreground">{crumb.name}</span>
-                  </span>
-                ))}
-              </nav>
-            </div>
-            <a href={`/skills/${relativePath}`} download={filename}>
-              <Button size="sm" variant="outline">
-                <Download className="w-4 h-4 mr-2" data-icon="inline-start" />
-                Download
-              </Button>
-            </a>
-          </div>
-        </div>
-
-        <main className="container mx-auto px-4 py-8 max-w-4xl">
-          <h1 className="text-3xl font-bold tracking-tight mb-6">{filename}</h1>
-          <article className="prose max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: marked.parse(file.content) }} />
-          </article>
-        </main>
-      </div>
-    )
-  }
-
-  // It's a directory, show contents
-  const items = getDirectoryContents(relativePath || "")
+function BreadcrumbNav({ relativePath }: { relativePath: string }) {
   const breadcrumbs = getBreadcrumbs(relativePath)
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b bg-card">
-        <div className="container mx-auto px-4 py-3">
-          {breadcrumbs.length > 1 && (
-            <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-              <Link href="/skills" className="hover:text-foreground transition-colors font-medium">skills</Link>
-              {breadcrumbs.slice(1).map((crumb) => (
-                <span key={crumb.path} className="flex items-center">
-                  <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
-                  <Link
-                    href={`/skills/${crumb.path}`}
-                    className="hover:text-foreground transition-colors"
-                  >
-                    {crumb.name}
-                  </Link>
-                </span>
-              ))}
-            </nav>
-          )}
+    <nav className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
+      <Link href="/skills" className="font-medium transition-colors hover:text-foreground">
+        skills
+      </Link>
+      {breadcrumbs.slice(1).map((crumb) => (
+        <span key={crumb.path} className="flex items-center gap-1">
+          <ChevronRight className="text-muted-foreground/60" />
+          <Link href={`/skills/${crumb.path}`} className="transition-colors hover:text-foreground">
+            {crumb.name}
+          </Link>
+        </span>
+      ))}
+    </nav>
+  )
+}
+
+export default async function SkillsPathPage({ params }: PageProps) {
+  const { path } = await params
+  const relativePath = path ? path.join("/") : ""
+
+  if (relativePath && isFilePath(relativePath)) {
+    const file = getFileContent(relativePath)
+    if (!file) return notFound()
+
+    const filename = relativePath.split("/").pop() || "document"
+    const parentPath = relativePath.slice(0, relativePath.lastIndexOf("/"))
+    const html = marked.parse(file.content)
+
+    return (
+      <main className="container mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8">
+        <div className="flex flex-col gap-4 rounded-lg border bg-card p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <BreadcrumbNav relativePath={parentPath} />
+            <Button size="sm" variant="outline" render={<a href={`/skills/${relativePath}`} download={filename} />}>
+              <Download data-icon="inline-start" />
+              Download
+            </Button>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Badge variant="secondary" className="w-fit">
+              Markdown
+            </Badge>
+            <h1 className="text-3xl font-semibold tracking-tight">{filename}</h1>
+          </div>
+        </div>
+
+        <article className="prose max-w-none rounded-lg border bg-card p-5">
+          <div dangerouslySetInnerHTML={{ __html: html }} />
+        </article>
+      </main>
+    )
+  }
+
+  const items = getDirectoryContents(relativePath)
+  if (relativePath && items.length === 0) return notFound()
+
+  const title = relativePath ? relativePath.split("/").pop() : "eCash Skills"
+
+  return (
+    <main className="container mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8">
+      <div className="flex flex-col gap-4 rounded-lg border bg-card p-4">
+        <BreadcrumbNav relativePath={relativePath} />
+        <div className="flex flex-col gap-2">
+          <Badge variant="secondary" className="w-fit">
+            Directory
+          </Badge>
+          <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
         </div>
       </div>
 
-      <main className="container mx-auto px-4 py-8 max-w-3xl">
-        <h1 className="text-2xl font-bold tracking-tight mb-6">
-          {relativePath ? relativePath.split("/").pop() : "eCash Skills"}
-        </h1>
-
-        <Card>
-          <CardContent className="p-0">
-            {items.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">Empty directory</div>
-            ) : (
-              <ul className="divide-y">
-                {items.map((item) => (
-                  <li key={item.path}>
-                    <Link
-                      href={item.type === "directory" ? `/skills/${item.path}` : `/skills/${item.path}`}
-                      className="flex items-center gap-3 p-4 hover:bg-muted transition-colors"
-                    >
-                      {item.type === "directory" ? (
-                        <Folder className="w-5 h-5 text-primary" />
-                      ) : (
-                        <File className="w-5 h-5 text-muted-foreground" />
-                      )}
-                      <span className={item.type === "directory" ? "font-medium" : ""}>
-                        {item.name}
-                      </span>
-                      <Badge variant="secondary" className="ml-auto text-xs">
-                        {item.type}
-                      </Badge>
-                      {item.type === "directory" && (
-                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                      )}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Contents</CardTitle>
+          <CardDescription>Skill files are served directly from the plugin package.</CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          {items.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground">Empty directory</div>
+          ) : (
+            <ul className="divide-y">
+              {items.map((item) => (
+                <li key={item.path}>
+                  <Link
+                    href={`/skills/${item.path}`}
+                    className="flex items-center gap-3 p-4 transition-colors hover:bg-muted/60"
+                  >
+                    {item.type === "directory" ? (
+                      <Folder className="text-primary" />
+                    ) : (
+                      <File className="text-muted-foreground" />
+                    )}
+                    <span className="min-w-0 flex-1 truncate">
+                      <span className={item.type === "directory" ? "font-medium" : ""}>{item.name}</span>
+                    </span>
+                    <Badge variant="outline">{item.type}</Badge>
+                    {item.type === "directory" && <ChevronRight className="text-muted-foreground" />}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
+    </main>
   )
 }
