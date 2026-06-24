@@ -1,7 +1,7 @@
 ---
 name: ecash
-description: Comprehensive eCash blockchain development skills for Claude Code
-version: 0.4.0
+description: Maintained eCash AI-agent skill for Claude Code, Codex, Cursor, OpenCode, and compatible coding agents
+version: 0.4.1
 tags: [ecash, blockchain, bitcoin-abc, chronik, wallet, tokens, xec]
 ---
 
@@ -22,9 +22,19 @@ Tell the user: "ecashskill **v{new}** is available (you're on v{old}). Update wi
 claude plugin install alitayin/ecashskill
 ```"
 
-# eCash Development Skills
+# eCash AI Skill
 
-This skill provides comprehensive development capabilities for eCash blockchain applications using AI coding agents.
+eCash AI Skill is a maintained skill package for AI coding agents working on
+eCash apps. It gives Claude Code, Codex, Cursor, OpenCode, and compatible agents
+concise project context, library selection guidance, coding rules, and testing
+patterns for Chronik, ecash-lib, wallets, tokens, Agora, Cashtab, and PayButton.
+
+## Scope
+
+Use this skill as the eCash knowledge and workflow layer inside an AI coding
+agent. It helps the agent choose the right eCash library, handle XEC and token
+units correctly, avoid key-handling mistakes, and write tests that do not depend
+on public Chronik availability.
 
 ## What is eCash?
 
@@ -135,6 +145,12 @@ const chronik = new ChronikClient(['https://chronik.e.cash/']);
 ```
 
 For more available Chronik nodes, see [https://chronik.cash](https://chronik.cash).
+
+## Version 0.4.1 Notes
+
+- Refined product wording for the installable eCash AI Skill.
+- Updated the cashtab-connect reference to v1.2.0 with Android pay.e.cash helpers.
+- Refreshed site dependencies and lockfiles.
 
 ## Version 0.4.0 Notes
 

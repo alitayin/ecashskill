@@ -8,7 +8,7 @@ export function Header() {
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold transition-colors hover:text-primary">
           <BookOpen />
-          ecashskill
+          eCash AI Skill
         </Link>
         <nav className="flex items-center gap-1">
           <Button variant="ghost" render={<Link href="/reference" />}>

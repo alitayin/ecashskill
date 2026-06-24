@@ -14,8 +14,8 @@ export default function ReferencePage() {
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight">eCash reference map</h1>
           <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-            Fast entry points into the maintained skill references. Each page is optimized
-            for agent work: install hints, common methods, unit conventions, and pitfalls.
+            Fast entry points into the maintained eCash AI Skill references. Each page is
+            optimized for agent work: install hints, common methods, unit conventions, and pitfalls.
           </p>
         </div>
       </div>

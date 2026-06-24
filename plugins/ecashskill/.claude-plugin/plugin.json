@@ -1,5 +1,5 @@
 {
   "name": "ecashskill",
-  "description": "Comprehensive eCash blockchain development skills for Claude Code",
-  "version": "0.4.0"
+  "description": "Installable eCash AI-agent skill for Claude Code and compatible coding agents",
+  "version": "0.4.1"
 }

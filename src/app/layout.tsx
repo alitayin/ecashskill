@@ -5,8 +5,9 @@ import { Footer } from "@/components/layout/Footer"
 import { AuroraBackground } from "@/components/AuroraBackground"
 
 export const metadata: Metadata = {
-  title: "ecashskill — eCash AI Development Skills",
-  description: "Comprehensive eCash blockchain development skills for Claude Code and Cursor. Covers chronik, ecash-lib, ecash-agora, cashtab, and more.",
+  title: "eCash AI Skill",
+  description:
+    "Maintained eCash AI Skill for Claude Code, Codex, Cursor, OpenCode, and compatible agents. Covers Chronik, ecash-lib, wallets, Agora, Cashtab, PayButton, and testing.",
 }
 
 export default function RootLayout({

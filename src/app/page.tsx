@@ -46,15 +46,17 @@ export default function Home() {
           <div className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="secondary">v{VERSION}</Badge>
-              <Badge variant="outline">Agent Skills</Badge>
+              <Badge variant="outline">Agent skill</Badge>
             </div>
             <div className="flex flex-col gap-4">
               <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
-                eCash AI Development Skills
+                eCash AI Skill
               </h1>
               <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-                A maintained skill pack for building with eCash, Chronik, ecash-lib,
-                wallets, tokens, Agora, Cashtab, PayButton, and realistic test doubles.
+                A maintained skill package for eCash development in Claude Code,
+                Codex, Cursor, OpenCode, and compatible agents. It collects practical
+                context for Chronik, ecash-lib, wallets, tokens, Agora, Cashtab,
+                PayButton, and realistic test doubles.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">

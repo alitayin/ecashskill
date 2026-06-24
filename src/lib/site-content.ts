@@ -5,7 +5,7 @@ export const installTabs = [
     value: "claude",
     label: "Claude Code",
     title: "Claude Code plugin",
-    description: "Use the plugin marketplace when you want the skill available through Claude Code.",
+    description: "Install the eCash AI Skill as a Claude Code plugin for eCash development sessions.",
     steps: [
       {
         title: "Add marketplace",
@@ -25,7 +25,7 @@ export const installTabs = [
     value: "skills-cli",
     label: "Skills CLI",
     title: "Agent Skills install",
-    description: "Use the Agent Skills CLI for Codex, Cursor, Claude Code, OpenCode, and compatible tools.",
+    description: "Use the Agent Skills CLI for Codex, Cursor, Claude Code, OpenCode, and compatible agents.",
     steps: [
       {
         title: "Install into the current project",
@@ -41,7 +41,7 @@ export const installTabs = [
     value: "cursor",
     label: "Cursor",
     title: "Cursor project or global install",
-    description: "Cursor auto-discovers skills from project and global skill directories.",
+    description: "Install the same eCash AI Skill package where Cursor can auto-discover it.",
     steps: [
       {
         title: "Project install",
@@ -58,22 +58,22 @@ export const installTabs = [
 export const capabilityCards = [
   {
     title: "Chronik queries",
-    description: "Address history, UTXOs, token lookups, block data, broadcast flows, and WebSocket subscriptions.",
+    description: "Agent-ready guidance for address history, UTXOs, token lookups, broadcasts, and WebSockets.",
     icon: Library,
   },
   {
     title: "Wallet and signing",
-    description: "HD wallet paths, XEC units, token actions, ecash-lib transaction building, and signing patterns.",
+    description: "Rules for HD wallet paths, XEC units, token actions, transaction building, and signing patterns.",
     icon: Wallet,
   },
   {
     title: "Apps and integrations",
-    description: "Cashtab, Cashtab Connect, PayButton, Agora offers, quicksend flows, and reference implementations.",
+    description: "Implementation context for Cashtab, Cashtab Connect, PayButton, Agora, and quicksend flows.",
     icon: Plug,
   },
   {
     title: "Testing guidance",
-    description: "Mock Chronik clients, deterministic fixtures, unit boundaries, and network-free checks.",
+    description: "Mock Chronik clients, deterministic transaction fixtures, unit boundaries, and network-free checks.",
     icon: ShieldCheck,
   },
 ] as const
@@ -140,13 +140,13 @@ export const referenceCards = [
 export const projectLinks = [
   {
     title: "SKILL.md",
-    description: "Entry point with usage triggers, reference map, and prompt templates.",
+    description: "Skill entry point with usage triggers, reference map, and prompt templates.",
     href: "/skills/SKILL.md",
     icon: FileText,
   },
   {
     title: "references/",
-    description: "Versioned docs for Chronik, wallets, tokens, payments, marketplaces, and tests.",
+    description: "Versioned eCash docs for Chronik, wallets, tokens, payments, marketplaces, and tests.",
     href: "/skills/references",
     icon: Library,
   },
